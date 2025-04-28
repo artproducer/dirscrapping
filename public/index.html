@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dirección Aleatoria</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <button id="theme-toggle" class="theme-toggle">🌙 Modo Oscuro</button> <!-- Botón de modo oscuro -->
+        <h2>Dirección Generada</h2>
+        <div class="item">
+            <span><b>Street:</b> <span id="street">N/A</span></span>
+            <button onclick="copyToClipboard('street')">Copiar</button>
+        </div>
+        <div class="item">
+            <span><b>City:</b> <span id="city">N/A</span></span>
+            <button onclick="copyToClipboard('city')">Copiar</button>
+        </div>
+        <div class="item">
+            <span><b>State:</b> <span id="state">N/A</span></span>
+            <button onclick="copyToClipboard('state')">Copiar</button>
+        </div>
+        <div class="item">
+            <span><b>Zip Code:</b> <span id="zip">N/A</span></span>
+            <button onclick="copyToClipboard('zip')">Copiar</button>
+        </div>
+        <div class="item">
+            <span><b>Phone:</b> <span id="phone">N/A</span></span>
+            <button onclick="copyToClipboard('phone')">Copiar</button>
+        </div>
+        <button class="refresh" onclick="generateNewAddress()">Generar Nueva Dirección</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,97 @@
+/* Estilos base (modo claro) */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 5px;
+}
+
+.item span {
+    font-size: 1rem;
+    text-align: left;
+}
+
+button {
+    padding: 5px 10px;
+    border: none;
+    background: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+.refresh {
+    margin-top: 20px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    width: 100%;
+}
+
+.theme-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 5px 10px;
+    font-size: 0.9rem;
+}
+
+/* Estilos para el modo oscuro */
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+body.dark-mode .container {
+    background: #1e1e1e;
+    color: #ffffff;
+}
+
+body.dark-mode .item {
+    background: #2d2d2d;
+    color: #ffffff;
+}
+
+body.dark-mode button {
+    background: #555;
+    color: #ffffff;
+}
+
+body.dark-mode button:hover {
+    background: #777;
+}
