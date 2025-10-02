@@ -6,7 +6,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "sync:android": "npx cap sync android"
   },
   "keywords": [
     "random",
@@ -15,6 +16,13 @@
   ],
   "author": "",
   "license": "MIT",
+  "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/core": "^6.1.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.2"
+  },
   "engines": {
     "node": ">=18.0.0"
   }
