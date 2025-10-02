@@ -1,161 +1,247 @@
-import { fetchAddress } from './mymodules.js';
-
-// Función para alternar el modo oscuro
-function toggleDarkMode() {
-    const body = document.body;
-    body.classList.toggle('dark-mode');
-    
-    // Guardar preferencia (ya no usa localStorage debido a las restricciones)
-    // En producción, podrías usar cookies o sessionStorage si es necesario
-}
-
-// Cargar preferencia del usuario al iniciar
-function loadDarkModePreference() {
-    // Detectar preferencia del sistema
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if (prefersDark) {
-        document.body.classList.add('dark-mode');
+(() => {
+  const androidClipboard = (() => {
+    const bridge = window.Android || window.AndroidInterface || window.AndroidBridge;
+    if (!bridge) {
+      return null;
     }
-}
 
-// Asignar evento al botón de modo oscuro
-document.getElementById('theme-toggle').addEventListener('click', toggleDarkMode);
+    const method = typeof bridge.copyToClipboard === "function"
+      ? bridge.copyToClipboard
+      : (typeof bridge.copy === "function" ? bridge.copy : null);
 
-// Cargar preferencia al cargar la página
-window.addEventListener('load', () => {
-    loadDarkModePreference();
-    // Generar dirección inicial automáticamente
-    generateNewAddress();
-});
+    if (!method) {
+      return null;
+    }
 
-  const select = document.getElementById('country-select');
-  const flagEl = document.getElementById('flag');
+    return text => {
+      const safe = text === undefined || text === null ? "" : String(text);
+      method.call(bridge, safe);
+    };
+  })();
 
-  const updateFlag = () => {
-    // Limpia clases previas y aplica la del país actual (ISO alfa-2)
-    flagEl.className = `fi fi-${select.value}`;
-  };
+  function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
+  }
 
-  select.addEventListener('change', updateFlag);
-  updateFlag(); // inicial
-
-
-// Función para generar nueva dirección
-async function generateNewAddress() {
-    const loading = document.getElementById('loading');
-    const content = document.getElementById('address-content');
-    const countrySelect = document.getElementById('country-select');
-    const selectedCountry = countrySelect.value;
-    
-    // Mostrar loading
-    loading.classList.add('active');
-    
+  function loadDarkModePreference() {
     try {
-        const data = await fetchAddress(selectedCountry);
-        
-        // Pequeño delay para efecto visual
-        setTimeout(() => {
-            // Actualizar datos con animación
-            updateFieldWithAnimation('name', data.name);
-            updateFieldWithAnimation('street', data.street);
-            updateFieldWithAnimation('city', data.city);
-            updateFieldWithAnimation('state', data.state);
-            updateFieldWithAnimation('phone', data.phone);
-            updateFieldWithAnimation('zip', data.zip);
-            
-            // Ocultar loading
-            loading.classList.remove('active');
-        }, 500);
-        
-    } catch (error) {
-        console.error('Error:', error);
-        loading.classList.remove('active');
-        showToast('Error al generar dirección', true);
-    }
-}
-
-// Función para actualizar campo con animación
-function updateFieldWithAnimation(fieldId, value) {
-    const element = document.getElementById(fieldId);
-    element.style.opacity = '0';
-    
-    setTimeout(() => {
-        element.textContent = value || 'N/A';
-        element.style.opacity = '1';
-    }, 150);
-}
-
-// Función para copiar al portapapeles
-async function copyToClipboard(field, event) {
-    const text = document.getElementById(field).textContent;
-    
-    // Verificar que el texto no sea placeholder
-    if (text === 'N/A' || text === '-' || text === 'Haz clic en generar') {
-        showToast('No hay datos para copiar', true);
-        return;
-    }
-    
-    try {
-        // Método moderno con clipboard API
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            await navigator.clipboard.writeText(text);
-            showToast('¡Copiado al portapapeles!');
-        } else {
-            // Fallback para navegadores más antiguos
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            textarea.style.position = 'fixed';
-            textarea.style.opacity = '0';
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-            showToast('¡Copiado al portapapeles!');
-        }
-        
-        // Animación del botón
-        const btn = event?.target?.closest('.copy-btn') || event?.currentTarget;
-        if (btn) {
-            btn.style.transform = 'scale(1.2)';
-            setTimeout(() => {
-                btn.style.transform = '';
-            }, 200);
-        }
+      if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        document.body.classList.add("dark-mode");
+      }
     } catch (err) {
-        console.error('Error al copiar:', err);
-        showToast('Error al copiar al portapapeles', true);
+      // ignore
     }
-}
+  }
 
-// Función para mostrar toast de notificación
-function showToast(message, isError = false) {
-    const toast = document.getElementById('toast');
-    const toastText = toast.querySelector('span');
-    
-    toastText.textContent = message;
-    
-    // Cambiar color si es error
-    if (isError) {
-        toast.style.background = '#ef4444';
-    } else {
-        toast.style.background = 'var(--success)';
+  const themeToggle = document.getElementById("theme-toggle");
+  if (themeToggle) {
+    themeToggle.addEventListener("click", toggleDarkMode);
+  }
+
+  const countrySelect = document.getElementById("country-select");
+  const flagEl = document.getElementById("flag");
+
+  function updateFlag() {
+    if (!flagEl || !countrySelect) {
+      return;
     }
-    
-    toast.classList.add('show');
-    
+    flagEl.className = "fi fi-" + countrySelect.value;
+  }
+
+  if (countrySelect) {
+    countrySelect.addEventListener("change", updateFlag);
+  }
+  updateFlag();
+
+  function sanitizePhone(value) {
+    return String(value === undefined || value === null ? "" : value).replace(/\D+/g, "");
+  }
+
+  function buildName(entry) {
+    const parts = [];
+    if (entry && entry.title) {
+      const title = String(entry.title).trim();
+      if (title) parts.push(title);
+    }
+    if (entry && entry.firstName) {
+      const first = String(entry.firstName).trim();
+      if (first) parts.push(first);
+    }
+    if (entry && entry.lastName) {
+      const last = String(entry.lastName).trim();
+      if (last) parts.push(last);
+    }
+    return parts.length ? parts.join(" ") : "N/A";
+  }
+
+  function buildStreet(entry) {
+    const parts = [];
+    if (entry && entry.streetNumber !== undefined && entry.streetNumber !== null) {
+      const number = String(entry.streetNumber).trim();
+      if (number) parts.push(number);
+    }
+    if (entry && entry.streetName) {
+      const street = String(entry.streetName).trim();
+      if (street) parts.push(street);
+    }
+    return parts.length ? parts.join(" ") : "N/A";
+  }
+
+  function safeText(value, fallback) {
+    const text = value === undefined || value === null ? "" : String(value).trim();
+    return text || fallback;
+  }
+
+  async function fetchAddress(country = "us") {
+    const generator = window.getRandomOfflineAddress;
+    if (typeof generator !== "function") {
+      throw new Error("Generador offline no disponible");
+    }
+
+    const normalized = (country || "us").toLowerCase();
+    const entry = generator(normalized);
+
+    if (!entry) {
+      throw new Error("No se pudo generar dirección offline");
+    }
+
+    const zipValue = entry && entry.zip ? entry.zip : (entry && entry.postalCode ? entry.postalCode : null);
+    const phoneDigits = sanitizePhone(entry && entry.phone);
+
+    const addressData = {
+      name: buildName(entry),
+      street: buildStreet(entry),
+      city: safeText(entry && entry.city, "N/A"),
+      state: safeText(entry && entry.state, "N/A"),
+      phone: phoneDigits || "N/A",
+      zip: zipValue ? String(zipValue).trim() : "N/A"
+    };
+
+    try {
+      localStorage.setItem("address.json", JSON.stringify(addressData));
+    } catch (storageError) {
+      // ignore storage issues
+    }
+
+    return addressData;
+  }
+
+  async function generateNewAddress() {
+    const loading = document.getElementById("loading");
+    if (loading) {
+      loading.classList.add("active");
+    }
+
+    try {
+      const country = countrySelect ? countrySelect.value : "us";
+      const data = await fetchAddress(country);
+
+      setTimeout(() => {
+        updateFieldWithAnimation("name", data.name);
+        updateFieldWithAnimation("street", data.street);
+        updateFieldWithAnimation("city", data.city);
+        updateFieldWithAnimation("state", data.state);
+        updateFieldWithAnimation("phone", data.phone);
+        updateFieldWithAnimation("zip", data.zip);
+        if (loading) {
+          loading.classList.remove("active");
+        }
+      }, 300);
+    } catch (error) {
+      console.error("Error:", error);
+      if (loading) {
+        loading.classList.remove("active");
+      }
+      showToast("Error al generar dirección", true);
+    }
+  }
+
+  function updateFieldWithAnimation(fieldId, value) {
+    const element = document.getElementById(fieldId);
+    if (!element) {
+      return;
+    }
+    element.style.opacity = "0";
     setTimeout(() => {
-        toast.classList.remove('show');
+      element.textContent = value || "N/A";
+      element.style.opacity = "1";
+    }, 150);
+  }
+
+  async function copyToClipboard(fieldId, event) {
+    const element = document.getElementById(fieldId);
+    const text = element && element.textContent ? element.textContent.trim() : "";
+
+    if (!text || text === "N/A" || text === "-" || text === "Haz clic en generar") {
+      showToast("No hay datos para copiar", true);
+      return;
+    }
+
+    try {
+      if (androidClipboard) {
+        androidClipboard(text);
+      } else if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        document.execCommand("copy");
+        textarea.remove();
+      }
+
+      showToast("¡Copiado al portapapeles!");
+
+      const target = event && event.target ? event.target : null;
+      const button = target && typeof target.closest === "function"
+        ? target.closest(".copy-btn")
+        : (event && event.currentTarget ? event.currentTarget : null);
+
+      if (button) {
+        button.style.transform = "scale(1.2)";
+        setTimeout(() => {
+          button.style.transform = "";
+        }, 200);
+      }
+    } catch (err) {
+      console.error("Error al copiar:", err);
+      showToast("Error al copiar al portapapeles", true);
+    }
+  }
+
+  function showToast(message, isError) {
+    const toast = document.getElementById("toast");
+    if (!toast) {
+      return;
+    }
+    const toastText = toast.querySelector("span");
+    if (toastText) {
+      toastText.textContent = message;
+    }
+    toast.style.background = isError ? "#ef4444" : "var(--success)";
+    toast.classList.add("show");
+    setTimeout(() => {
+      toast.classList.remove("show");
     }, 3000);
-}
+  }
 
-// Agregar estilo de transición a los campos
-document.addEventListener('DOMContentLoaded', () => {
-    const values = document.querySelectorAll('.value');
+  document.addEventListener("DOMContentLoaded", () => {
+    const values = document.querySelectorAll(".value");
     values.forEach(value => {
-        value.style.transition = 'opacity 0.3s ease';
+      value.style.transition = "opacity 0.3s ease";
     });
-});
+  });
 
-// Exponer funciones utilizadas en los atributos HTML
-window.generateNewAddress = generateNewAddress;
-window.copyToClipboard = copyToClipboard;
+  window.addEventListener("load", () => {
+    loadDarkModePreference();
+    generateNewAddress();
+  });
+
+  window.generateNewAddress = generateNewAddress;
+  window.copyToClipboard = copyToClipboard;
+  window.fetchAddress = fetchAddress;
+})();
