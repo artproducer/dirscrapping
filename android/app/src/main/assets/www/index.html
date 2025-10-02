@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Generador de Direcciones Aleatorias</title>
+
+    <!-- Estilos propios -->
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Banderas (flag-icons) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons/css/flag-icons.min.css" />
+
+    <!-- Ajustes mínimos para banderas y grilla 2 columnas -->
+    <style>
+        .country-select-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .country-select-wrap .fi {
+            width: 24px;
+            height: 18px;
+            border-radius: 3px;
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, .08), 0 1px 2px rgba(0, 0, 0, .06);
+            flex: 0 0 auto;
+        }
+
+        /* --- NUEVO: grilla para 2 columnas --- */
+        .field-row.two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            width: 100%;
+        }
+
+        /* Asegura que el espacio entre filas quede equilibrado */
+        .field-group>.field-row+.field-row {
+            margin-top: 16px;
+        }
+
+        @media (max-width: 720px) {
+            .field-row.two-col {
+                grid-template-columns: 1fr;
+                /* Se apilan en móviles */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-pattern"></div>
+
+    <div class="container">
+        <!-- Botón de tema -->
+        <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema">
+            <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <circle cx="12" cy="12" r="5" />
+                <line x1="12" y1="1" x2="12" y2="3" />
+                <line x1="12" y1="21" x2="12" y2="23" />
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                <line x1="1" y1="12" x2="3" y2="12" />
+                <line x1="21" y1="12" x2="23" y2="12" />
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
+            <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+        </button>
+
+        <!-- Header -->
+        <div class="header">
+            <h1>Generador de Direcciones</h1>
+            <p class="subtitle">Obtén datos aleatorios al instante</p>
+        </div>
+
+        <!-- Selector de país -->
+        <div class="country-selector">
+            <label for="country-select">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="2" y1="12" x2="22" y2="12" />
+                    <path
+                        d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                </svg>
+                Selecciona el país
+            </label>
+
+            <div class="country-select-wrap">
+                <span id="flag" class="fi fi-us" aria-hidden="true"></span>
+                <select id="country-select" onchange="generateNewAddress()">
+                    <option value="us" selected>Estados Unidos</option>
+                    <option value="de">Alemania</option>
+                    <option value="gb">Reino Unido</option>
+                    <option value="ca">Canadá</option>
+                    <option value="au">Australia</option>
+                    <option value="fr">Francia</option>
+                    <option value="es">España</option>
+                    <option value="br">Brasil</option>
+                    <option value="mx">México</option>
+                    <option value="nl">Países Bajos</option>
+                    <option value="ch">Suiza</option>
+                    <option value="no">Noruega</option>
+                    <option value="fi">Finlandia</option>
+                    <option value="dk">Dinamarca</option>
+                    <option value="nz">Nueva Zelanda</option>
+                    <option value="ie">Irlanda</option>
+                    <option value="tr">Turquía</option>
+                    <option value="in">India</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Tarjeta de dirección -->
+        <div class="address-card">
+            <div class="loading-overlay" id="loading">
+                <div class="spinner"></div>
+            </div>
+
+            <div class="address-content" id="address-content">
+                <div class="field-group">
+                    <!-- Nombre -->
+                    <div class="field">
+                        <label>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
+                            </svg>
+                            Nombre Completo
+                        </label>
+                        <div class="value-container">
+                            <span id="name" class="value">Haz clic en generar</span>
+                            <button class="copy-btn" onclick="copyToClipboard('name', event)"
+                                aria-label="Copiar nombre">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Dirección -->
+                    <div class="field">
+                        <label>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                <circle cx="12" cy="10" r="3" />
+                            </svg>
+                            Dirección
+                        </label>
+                        <div class="value-container">
+                            <span id="street" class="value">Haz clic en generar</span>
+                            <button class="copy-btn" onclick="copyToClipboard('street', event)"
+                                aria-label="Copiar dirección">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Fila 1: Ciudad / Estado -->
+                    <div class="field-row two-col">
+                        <!-- Ciudad -->
+                        <div class="field">
+                            <label>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="2" y1="12" x2="22" y2="12" />
+                                    <path
+                                        d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                                </svg>
+                                Ciudad
+                            </label>
+                            <div class="value-container">
+                                <span id="city" class="value">-</span>
+                                <button class="copy-btn" onclick="copyToClipboard('city', event)"
+                                    aria-label="Copiar ciudad">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Estado -->
+                        <div class="field">
+                            <label>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                    <line x1="3" y1="9" x2="21" y2="9" />
+                                    <line x1="9" y1="21" x2="9" y2="9" />
+                                </svg>
+                                Estado
+                            </label>
+                            <div class="value-container">
+                                <span id="state" class="value">-</span>
+                                <button class="copy-btn" onclick="copyToClipboard('state', event)"
+                                    aria-label="Copiar estado">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fila 2: Código Postal / Teléfono -->
+                    <div class="field-row two-col">
+                        <!-- Código Postal -->
+                        <div class="field">
+                            <label>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path
+                                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                                </svg>
+                                Código Postal
+                            </label>
+                            <div class="value-container">
+                                <span id="zip" class="value">-</span>
+                                <button class="copy-btn" onclick="copyToClipboard('zip', event)"
+                                    aria-label="Copiar código postal">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Teléfono -->
+                        <div class="field">
+                            <label>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path
+                                        d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                                </svg>
+                                Teléfono
+                            </label>
+                            <div class="value-container">
+                                <span id="phone" class="value">-</span>
+                                <button class="copy-btn" onclick="copyToClipboard('phone', event)"
+                                    aria-label="Copiar teléfono">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Fin filas 2 columnas -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Botón generar -->
+        <button class="generate-btn" onclick="generateNewAddress()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="23 4 23 10 17 10" />
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+            </svg>
+            Generar Nueva Dirección
+        </button>
+
+        <!-- Toast -->
+        <div class="toast" id="toast">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12" />
+            </svg>
+            <span>¡Copiado al portapapeles!</span>
+        </div>
+    </div>
+
+    <!-- Script principal -->
+    <script type="module" src="script.js"></script>
+</body>
+
+</html>
