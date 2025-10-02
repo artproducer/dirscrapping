@@ -4,165 +4,624 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generador de Direcciones Aleatorias</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --bg-primary: #f8f9fa;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #6b7280;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --border: #e5e7eb;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --success: #10b981;
+            --field-bg: #f9fafb;
+        }
+
+        body.dark-mode {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --accent: #818cf8;
+            --accent-hover: #6366f1;
+            --border: #334155;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --success: #34d399;
+            --field-bg: #0f172a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            transition: background 0.3s ease, color 0.3s ease;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .background-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            background-image:
+                linear-gradient(var(--accent) 1px, transparent 1px),
+                linear-gradient(90deg, var(--accent) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px var(--shadow);
+            width: 100%;
+            max-width: 600px;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--field-bg);
+            border: 2px solid var(--border);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(20deg) scale(1.05);
+            border-color: var(--accent);
+        }
+
+        .sun-icon {
+            display: block;
+            color: var(--text-primary);
+        }
+
+        .moon-icon {
+            display: none;
+            color: var(--text-primary);
+        }
+
+        body.dark-mode .sun-icon {
+            display: none;
+        }
+
+        body.dark-mode .moon-icon {
+            display: block;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .icon-wrapper {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            border-radius: 16px;
+            margin-bottom: 8px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .icon-wrapper svg {
+            stroke: white;
+            width: 32px;
+            height: 32px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .country-selector {
+            margin-bottom: 16px;
+            padding: 12px;
+            background: var(--field-bg);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .country-selector label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+
+        .country-selector label svg {
+            stroke: var(--accent);
+            width: 16px;
+            height: 16px;
+        }
+
+        #country-select {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        #country-select:hover {
+            border-color: var(--accent);
+        }
+
+        #country-select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        #country-select option {
+            padding: 10px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .address-card {
+            position: relative;
+            background: var(--field-bg);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            min-height: 280px;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-card);
+            border-radius: 16px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .field-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .field.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        label svg {
+            stroke: var(--accent);
+            width: 14px;
+            height: 14px;
+        }
+
+        .value-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            background: var(--bg-card);
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+            min-height: 36px;
+        }
+
+        .value-container:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+        }
+
+        .value {
+            flex: 1;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .copy-btn {
+            background: transparent;
+            border: none;
+            padding: 4px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .copy-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .copy-btn:hover {
+            background: var(--field-bg);
+            color: var(--accent);
+            transform: scale(1.1);
+        }
+
+        .copy-btn:active {
+            transform: scale(0.95);
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        .generate-btn svg {
+            animation: rotate 2s linear infinite paused;
+        }
+
+        .generate-btn:hover svg {
+            animation-play-state: running;
+        }
+
+        @keyframes rotate {
+            to { transform: rotate(360deg); }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--success);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 16px;
+            }
+
+            h1 {
+                font-size: 1.25rem;
+            }
+
+            .icon-wrapper {
+                width: 48px;
+                height: 48px;
+            }
+
+            .icon-wrapper svg {
+                width: 28px;
+                height: 28px;
+            }
+
+            .theme-toggle {
+                width: 36px;
+                height: 36px;
+                top: 12px;
+                right: 12px;
+            }
+
+            .field-group {
+                grid-template-columns: 1fr;
+            }
+
+            .value {
+                font-size: 0.8rem;
+            }
+
+            label {
+                font-size: 0.65rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="background-pattern"></div>
-    
-    <div class="container">
-        <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema">
-            <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="5"/>
-                <line x1="12" y1="1" x2="12" y2="3"/>
-                <line x1="12" y1="21" x2="12" y2="23"/>
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                <line x1="1" y1="12" x2="3" y2="12"/>
-                <line x1="21" y1="12" x2="23" y2="12"/>
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-            </svg>
-            <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-            </svg>
-        </button>
+<div class="background-pattern"></div>
 
-        <div class="header">
-            <div class="icon-wrapper">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                    <polyline points="9 22 9 12 15 12 15 22"/>
-                </svg>
-            </div>
-            <h1>Generador de Direcciones</h1>
-            <p class="subtitle">Obtén datos aleatorios al instante</p>
+<div class="container">
+    <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema">
+        <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+    </button>
+
+    <div class="header">
+        <div class="icon-wrapper">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+        </div>
+        <h1>Generador de Direcciones</h1>
+        <p class="subtitle">Obtén datos aleatorios al instante</p>
+    </div>
+
+    <div class="country-selector">
+        <label for="country-select">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="2" y1="12" x2="22" y2="12"/>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+            Selecciona el país
+        </label>
+        <select id="country-select" onchange="generateNewAddress()">
+            <option value="us" selected>🇺🇸 Estados Unidos</option>
+            <option value="de">🇩🇪 Alemania</option>
+            <option value="gb">🇬🇧 Reino Unido</option>
+            <option value="ca">🇨🇦 Canadá</option>
+            <option value="au">🇦🇺 Australia</option>
+            <option value="fr">🇫🇷 Francia</option>
+            <option value="es">🇪🇸 España</option>
+            <option value="br">🇧🇷 Brasil</option>
+            <option value="mx">🇲🇽 México</option>
+            <option value="nl">🇳🇱 Países Bajos</option>
+            <option value="ch">🇨🇭 Suiza</option>
+            <option value="no">🇳🇴 Noruega</option>
+            <option value="fi">🇫🇮 Finlandia</option>
+            <option value="dk">🇩🇰 Dinamarca</option>
+            <option value="nz">🇳🇿 Nueva Zelanda</option>
+            <option value="ie">🇮🇪 Irlanda</option>
+            <option value="tr">🇹🇷 Turquía</option>
+            <option value="in">🇮🇳 India</option>
+        </select>
+    </div>
+
+    <div class="address-card">
+        <div class="loading-overlay" id="loading">
+            <div class="spinner"></div>
         </div>
 
-        <div class="country-selector">
-            <label for="country-select">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <line x1="2" y1="12" x2="22" y2="12"/>
-                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-                </svg>
-                Selecciona el país
-            </label>
-            <select  id="country-select"  onchange="generateNewAddress()">
-                <option value="us" selected>🇺🇸 Estados Unidos</option>
-                <option value="de" >🇩🇪 Alemania</option>
-                <option value="gb">🇬🇧 Reino Unido</option>
-                <option value="ca">🇨🇦 Canadá</option>
-                <option value="au">🇦🇺 Australia</option>
-                <option value="fr">🇫🇷 Francia</option>
-                <option value="es">🇪🇸 España</option>
-                <option value="br">🇧🇷 Brasil</option>
-                <option value="mx">🇲🇽 México</option>
-                <option value="nl">🇳🇱 Países Bajos</option>
-                <option value="ch">🇨🇭 Suiza</option>
-                <option value="no">🇳🇴 Noruega</option>
-                <option value="fi">🇫🇮 Finlandia</option>
-                <option value="dk">🇩🇰 Dinamarca</option>
-                <option value="nz">🇳🇿 Nueva Zelanda</option>
-                <option value="ie">🇮🇪 Irlanda</option>
-                <option value="tr">🇹🇷 Turquía</option>
-                <option value="in">🇮🇳 India</option>
-            </select>
-        </div>
-
-        <div class="address-card">
-            <div class="loading-overlay" id="loading">
-                <div class="spinner"></div>
-            </div>
-
-            <div class="address-content" id="address-content">
-                <div class="field-group">
-                    <div class="field">
-                        <label>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                                <circle cx="12" cy="7" r="4"/>
+        <div class="address-content" id="address-content">
+            <div class="field-group">
+                <div class="field full-width">
+                    <label>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        Nombre Completo
+                    </label>
+                    <div class="value-container">
+                        <span id="name" class="value">Haz clic en generar</span>
+                        <button class="copy-btn" onclick="copyToClipboard('name', event)" aria-label="Copiar nombre">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                             </svg>
-                            Nombre Completo
-                        </label>
-                        <div class="value-container">
-                            <span id="name" class="value">Haz clic en generar</span>
-                            <button class="copy-btn" onclick="copyToClipboard('name', event)" aria-label="Copiar nombre">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                                </svg>
-                            </button>
-                        </div>
+                        </button>
                     </div>
+                </div>
 
-                    <div class="field">
-                        <label>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                                <circle cx="12" cy="10" r="3"/>
+                <div class="field full-width">
+                    <label>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        Dirección
+                    </label>
+                    <div class="value-container">
+                        <span id="street" class="value">Haz clic en generar</span>
+                        <button class="copy-btn" onclick="copyToClipboard('street', event)" aria-label="Copiar dirección">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                             </svg>
-                            Dirección
-                        </label>
-                        <div class="value-container">
-                            <span id="street" class="value">Haz clic en generar</span>
-                            <button class="copy-btn" onclick="copyToClipboard('street', event)" aria-label="Copiar dirección">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                                </svg>
-                            </button>
-                        </div>
+                        </button>
                     </div>
+                </div>
 
-                    <div class="field">
-                        <label>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"/>
-                                <line x1="2" y1="12" x2="22" y2="12"/>
-                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                <div class="field">
+                    <label>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="2" y1="12" x2="22" y2="12"/>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                        </svg>
+                        Ciudad
+                    </label>
+                    <div class="value-container">
+                        <span id="city" class="value">-</span>
+                        <button class="copy-btn" onclick="copyToClipboard('city', event)" aria-label="Copiar ciudad">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                             </svg>
-                            Ciudad
-                        </label>
-                        <div class="value-container">
-                            <span id="city" class="value">-</span>
-                            <button class="copy-btn" onclick="copyToClipboard('city', event)" aria-label="Copiar ciudad">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                                </svg>
-                            </button>
-                        </div>
+                        </button>
                     </div>
+                </div>
 
-                    <div class="field">
-                        <label>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                                <line x1="3" y1="9" x2="21" y2="9"/>
-                                <line x1="9" y1="21" x2="9" y2="9"/>
+                <div class="field">
+                    <label>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="3" y1="9" x2="21" y2="9"/>
+                            <line x1="9" y1="21" x2="9" y2="9"/>
+                        </svg>
+                        Estado
+                    </label>
+                    <div class="value-container">
+                        <span id="state" class="value">-</span>
+                        <button class="copy-btn" onclick="copyToClipboard('state', event)" aria-label="Copiar estado">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                             </svg>
-                            Estado
-                        </label>
-                        <div class="value-container">
-                            <span id="state" class="value">-</span>
-                            <button class="copy-btn" onclick="copyToClipboard('state', event)" aria-label="Copiar estado">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                                </svg>
-                            </button>
-                        </div>
+                        </button>
                     </div>
+                </div>
 
-                    <div class="field">
-                        <label>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                            </svg>
-                            Código Postal
-                        </label>
-                        <div class="value-container">
-                            <span id="zip" class="value">-</span>
+                <div class="field">
+                    <label>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        </svg>
+                        Código Postal
+                    </label>
+                    <div class="value-container">
+                        <span id="zip" class="value">-</span>
                             <button class="copy-btn" onclick="copyToClipboard('zip', event)" aria-label="Copiar código postal">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
