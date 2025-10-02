@@ -1,30 +1,32 @@
 :root {
-    --bg-primary: #f8f9fa;
-    --bg-secondary: #ffffff;
-    --bg-card: #ffffff;
-    --text-primary: #1a1a1a;
-    --text-secondary: #6b7280;
-    --accent: #6366f1;
-    --accent-hover: #4f46e5;
-    --border: #e5e7eb;
-    --shadow: rgba(0, 0, 0, 0.1);
-    --success: #10b981;
-    --field-bg: #f9fafb;
+    --bg-primary: #005a9e;         /* gris muy claro */
+    --bg-secondary: #ffffff;     /* blanco */
+    --bg-card: #ffffff;          /* tarjetas en blanco */
+    --text-primary: #1a1a1a;     /* texto principal oscuro */
+    --text-secondary: #6b7280;   /* texto secundario gris */
+    --accent: #0078d4;           /* azul Windows */
+    --accent-hover: #005a9e;     /* azul Windows más oscuro para hover */
+    --border: #e5e7eb;           /* borde gris claro */
+    --shadow: rgba(0, 0, 0, 0.1);/* sombra ligera */
+    --success: #10b981;          /* verde éxito */
+    --field-bg: #f9fafb;         /* campos de entrada */
 }
 
+
 body.dark-mode {
-    --bg-primary: #0f172a;
-    --bg-secondary: #1e293b;
-    --bg-card: #1e293b;
-    --text-primary: #f1f5f9;
-    --text-secondary: #94a3b8;
-    --accent: #818cf8;
-    --accent-hover: #6366f1;
-    --border: #334155;
-    --shadow: rgba(0, 0, 0, 0.3);
-    --success: #34d399;
-    --field-bg: #0f172a;
+    --bg-primary: #121212;       /* gris carbón profundo */
+    --bg-secondary: #1c1c1c;     /* gris oscuro */
+    --bg-card: #1e1e1e;          /* fondo para tarjetas */
+    --text-primary: #eaeaea;     /* texto claro */
+    --text-secondary: #b0b0b0;   /* texto secundario gris */
+    --accent: #0078d4;           /* azul Windows */
+    --accent-hover: #005a9e;     /* azul más oscuro al hover */
+    --border: #2a2a2a;           /* borde neutro */
+    --shadow: rgba(0, 0, 0, 0.4);/* sombra suave */
+    --success: #4ade80;          /* verde éxito */
+    --field-bg: #1a1a1a;         /* campos oscuros */
 }
+
 
 * {
     margin: 0;
