@@ -1,3 +1,5 @@
+import { fetchAddress } from './mymodules.js';
+
 // Función para alternar el modo oscuro
 function toggleDarkMode() {
     const body = document.body;
@@ -26,6 +28,18 @@ window.addEventListener('load', () => {
     generateNewAddress();
 });
 
+  const select = document.getElementById('country-select');
+  const flagEl = document.getElementById('flag');
+
+  const updateFlag = () => {
+    // Limpia clases previas y aplica la del país actual (ISO alfa-2)
+    flagEl.className = `fi fi-${select.value}`;
+  };
+
+  select.addEventListener('change', updateFlag);
+  updateFlag(); // inicial
+
+
 // Función para generar nueva dirección
 async function generateNewAddress() {
     const loading = document.getElementById('loading');
@@ -37,13 +51,7 @@ async function generateNewAddress() {
     loading.classList.add('active');
     
     try {
-        const response = await fetch(`/generate-address?country=${selectedCountry}`);
-        
-        if (!response.ok) {
-            throw new Error('Error al generar dirección');
-        }
-        
-        const data = await response.json();
+        const data = await fetchAddress(selectedCountry);
         
         // Pequeño delay para efecto visual
         setTimeout(() => {
@@ -147,3 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
         value.style.transition = 'opacity 0.3s ease';
     });
 });
+
+// Exponer funciones utilizadas en los atributos HTML
+window.generateNewAddress = generateNewAddress;
+window.copyToClipboard = copyToClipboard;

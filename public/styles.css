@@ -417,3 +417,35 @@ label svg {
         height: 40px;
     }
 }
+/* Fila de dos columnas para emparejar campos (Ciudad/Estado, ZIP/Teléfono) */
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+/* En pantallas medianas+ mostrar dos columnas */
+@media (min-width: 640px) {
+  .field-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Asegura alineado tipo “pill” y truncado elegante */
+.value-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2px;
+}
+
+.value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Opcional: que los botones de copiar queden del mismo tamaño */
+.copy-btn {
+  flex-shrink: 0;
+}
