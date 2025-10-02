@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Generador de Direcciones</string>
+    <string name="title_activity_main">Generador de Direcciones</string>
+    <string name="package_name">com.dirscrapping.generator</string>
+    <string name="custom_url_scheme">com.dirscrapping.generator</string>
+</resources>
