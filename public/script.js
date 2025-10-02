@@ -1,57 +1,148 @@
 // Función para alternar el modo oscuro
 function toggleDarkMode() {
     const body = document.body;
-    const themeToggle = document.getElementById('theme-toggle');
-
-    // Alternar la clase 'dark-mode' en el body
     body.classList.toggle('dark-mode');
-
-    // Cambiar el texto del botón
-    if (body.classList.contains('dark-mode')) {
-        themeToggle.textContent = '☀️ Modo Claro';
-    } else {
-        themeToggle.textContent = '🌙 Modo Oscuro';
-    }
-
-    // Guardar la preferencia del usuario en localStorage
-    const isDarkMode = body.classList.contains('dark-mode');
-    localStorage.setItem('dark-mode', isDarkMode);
+    
+    // Guardar preferencia (ya no usa localStorage debido a las restricciones)
+    // En producción, podrías usar cookies o sessionStorage si es necesario
 }
 
-// Cargar la preferencia del usuario al iniciar
+// Cargar preferencia del usuario al iniciar
 function loadDarkModePreference() {
-    const isDarkMode = localStorage.getItem('dark-mode') === 'true';
-    const body = document.body;
-    const themeToggle = document.getElementById('theme-toggle');
-
-    if (isDarkMode) {
-        body.classList.add('dark-mode');
-        themeToggle.textContent = '☀️ Modo Claro';
-    } else {
-        body.classList.remove('dark-mode');
-        themeToggle.textContent = '🌙 Modo Oscuro';
+    // Detectar preferencia del sistema
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (prefersDark) {
+        document.body.classList.add('dark-mode');
     }
 }
 
-// Asignar el evento al botón de modo oscuro
+// Asignar evento al botón de modo oscuro
 document.getElementById('theme-toggle').addEventListener('click', toggleDarkMode);
 
-// Cargar la preferencia al cargar la página
-window.addEventListener('load', loadDarkModePreference);
+// Cargar preferencia al cargar la página
+window.addEventListener('load', () => {
+    loadDarkModePreference();
+    // Generar dirección inicial automáticamente
+    generateNewAddress();
+});
 
-// Resto del código (generar dirección y copiar al portapapeles)
+// Función para generar nueva dirección
 async function generateNewAddress() {
-    const response = await fetch('/generate-address');
-    const data = await response.json();
-
-    document.getElementById('street').textContent = data.street;
-    document.getElementById('city').textContent = data.city;
-    document.getElementById('state').textContent = data.state;
-    document.getElementById('phone').textContent = data.phone;
-    document.getElementById('zip').textContent = data.zip;
+    const loading = document.getElementById('loading');
+    const content = document.getElementById('address-content');
+    const countrySelect = document.getElementById('country-select');
+    const selectedCountry = countrySelect.value;
+    
+    // Mostrar loading
+    loading.classList.add('active');
+    
+    try {
+        const response = await fetch(`/generate-address?country=${selectedCountry}`);
+        
+        if (!response.ok) {
+            throw new Error('Error al generar dirección');
+        }
+        
+        const data = await response.json();
+        
+        // Pequeño delay para efecto visual
+        setTimeout(() => {
+            // Actualizar datos con animación
+            updateFieldWithAnimation('street', data.street);
+            updateFieldWithAnimation('city', data.city);
+            updateFieldWithAnimation('state', data.state);
+            updateFieldWithAnimation('phone', data.phone);
+            updateFieldWithAnimation('zip', data.zip);
+            
+            // Ocultar loading
+            loading.classList.remove('active');
+        }, 500);
+        
+    } catch (error) {
+        console.error('Error:', error);
+        loading.classList.remove('active');
+        showToast('Error al generar dirección', true);
+    }
 }
 
-function copyToClipboard(field) {
+// Función para actualizar campo con animación
+function updateFieldWithAnimation(fieldId, value) {
+    const element = document.getElementById(fieldId);
+    element.style.opacity = '0';
+    
+    setTimeout(() => {
+        element.textContent = value || 'N/A';
+        element.style.opacity = '1';
+    }, 150);
+}
+
+// Función para copiar al portapapeles
+async function copyToClipboard(field, event) {
     const text = document.getElementById(field).textContent;
-    navigator.clipboard.writeText(text);
+    
+    // Verificar que el texto no sea placeholder
+    if (text === 'N/A' || text === '-' || text === 'Haz clic en generar') {
+        showToast('No hay datos para copiar', true);
+        return;
+    }
+    
+    try {
+        // Método moderno con clipboard API
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(text);
+            showToast('¡Copiado al portapapeles!');
+        } else {
+            // Fallback para navegadores más antiguos
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            showToast('¡Copiado al portapapeles!');
+        }
+        
+        // Animación del botón
+        const btn = event?.target?.closest('.copy-btn') || event?.currentTarget;
+        if (btn) {
+            btn.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                btn.style.transform = '';
+            }, 200);
+        }
+    } catch (err) {
+        console.error('Error al copiar:', err);
+        showToast('Error al copiar al portapapeles', true);
+    }
 }
+
+// Función para mostrar toast de notificación
+function showToast(message, isError = false) {
+    const toast = document.getElementById('toast');
+    const toastText = toast.querySelector('span');
+    
+    toastText.textContent = message;
+    
+    // Cambiar color si es error
+    if (isError) {
+        toast.style.background = '#ef4444';
+    } else {
+        toast.style.background = 'var(--success)';
+    }
+    
+    toast.classList.add('show');
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
+}
+
+// Agregar estilo de transición a los campos
+document.addEventListener('DOMContentLoaded', () => {
+    const values = document.querySelectorAll('.value');
+    values.forEach(value => {
+        value.style.transition = 'opacity 0.3s ease';
+    });
+});
