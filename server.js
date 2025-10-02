@@ -1,11 +1,7 @@
-import http from 'http';
-import https from 'https';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Este archivo ahora está diseñado para ejecutarse en entornos de navegador
+// y no depende de APIs específicas de Node.js. Contiene las mismas reglas de
+// generación de códigos postales y la función principal para obtener datos de
+// dirección desde la API pública de Random User Generator.
 
 /**
  * Mapeo de códigos postales por estado/región para diferentes países
@@ -176,156 +172,88 @@ function generateZipForState(country, state) {
     return null;
 }
 
+const NATIONALITY_MAP = {
+    au: 'AU',
+    br: 'BR',
+    ca: 'CA',
+    ch: 'CH',
+    de: 'DE',
+    dk: 'DK',
+    es: 'ES',
+    fi: 'FI',
+    fr: 'FR',
+    gb: 'GB',
+    ie: 'IE',
+    in: 'IN',
+    mx: 'MX',
+    nl: 'NL',
+    no: 'NO',
+    nz: 'NZ',
+    tr: 'TR',
+    us: 'US'
+};
+
 /**
  * Función para obtener una dirección aleatoria desde una API
  * @param {string} country - Código del país (us, de, gb, etc.)
  */
-async function fetchAddress(country = 'de') {
-    return new Promise((resolve, reject) => {
-        // Usamos la API gratuita de Random User Generator
-        const options = {
-            hostname: 'randomuser.me',
-            path: `/api/?nat=${country}&inc=name,location,phone`,
-            method: 'GET',
-            headers: {
-                'User-Agent': 'Mozilla/5.0'
-            }
-        };
+export async function fetchAddress(country = 'de') {
+    const nationality = NATIONALITY_MAP[country] || country.toUpperCase();
+    const url = `https://randomuser.me/api/?nat=${encodeURIComponent(nationality)}&inc=name,location,phone`;
 
-        const req = https.request(options, (res) => {
-            let data = '';
+    const response = await fetch(url);
 
-            res.on('data', (chunk) => {
-                data += chunk;
-            });
-
-            res.on('end', () => {
-                try {
-                    const json = JSON.parse(data);
-                    const result = json.results[0];
-                    const location = result.location;
-                    const name = result.name;
-                    
-                    // Generar código postal basado en el estado
-                    let adjustedZip = generateZipForState(country, location.state);
-                    
-                    // Si no se encontró un mapeo, usar el código postal de la API con formato ajustado
-                    if (!adjustedZip) {
-                        adjustedZip = location.postcode.toString();
-                        
-                        // Ajustes de formato si no hay mapeo
-                        if (country === 'us' || country === 'de' || country === 'es' || country === 'mx') {
-                            adjustedZip = adjustedZip.padStart(5, '0').substring(0, 5);
-                        } else if (country === 'gb' || country === 'ca') {
-                            adjustedZip = adjustedZip.toUpperCase();
-                        } else if (country === 'br') {
-                            if (adjustedZip.length >= 8) {
-                                adjustedZip = adjustedZip.substring(0, 5) + '-' + adjustedZip.substring(5, 8);
-                            }
-                        }
-                    }
-                    
-                    const addressData = {
-                        name: `${name.title} ${name.first} ${name.last}`,
-                        street: `${location.street.number} ${location.street.name}`,
-                        city: location.city,
-                        state: location.state,
-                        phone: result.phone.replace(/\D/g, ''),
-                        zip: adjustedZip
-                    };
-
-                    // Guarda los datos en un archivo JSON
-                    const dataDir = path.join(__dirname, 'data');
-                    if (!fs.existsSync(dataDir)) {
-                        fs.mkdirSync(dataDir, { recursive: true });
-                    }
-                    fs.writeFileSync(
-                        path.join(dataDir, 'address.json'), 
-                        JSON.stringify(addressData, null, 2)
-                    );
-
-                    resolve(addressData);
-                } catch (error) {
-                    console.error('Error parsing response:', error);
-                    reject(error);
-                }
-            });
-        });
-
-        req.on('error', (error) => {
-            console.error('Error fetching address:', error);
-            resolve({
-                name: "N/A",
-                street: "N/A",
-                city: "N/A",
-                state: "N/A",
-                phone: "N/A",
-                zip: "N/A"
-            });
-        });
-
-        req.end();
-    });
-}
-
-// Crear servidor HTTP
-const server = http.createServer(async (req, res) => {
-    // Endpoint para generar dirección
-    if (req.url.startsWith('/generate-address') && req.method === 'GET') {
-        // Extraer el parámetro del país de la URL
-        const urlParams = new URL(req.url, `http://${req.headers.host}`);
-        const country = urlParams.searchParams.get('country') || 'de';
-        
-        const addressData = await fetchAddress(country);
-        res.writeHead(200, { 
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
-        });
-        res.end(JSON.stringify(addressData));
-        return;
+    if (!response.ok) {
+        throw new Error(`Error al obtener datos: ${response.status}`);
     }
 
-    // Servir archivos estáticos
-    let filePath = path.join(__dirname, 'public', req.url === '/' ? 'index.html' : req.url);
-    const extname = path.extname(filePath);
-    
-    const contentTypes = {
-        '.html': 'text/html',
-        '.css': 'text/css',
-        '.js': 'text/javascript',
-        '.json': 'application/json',
-        '.png': 'image/png',
-        '.jpg': 'image/jpeg',
-        '.svg': 'image/svg+xml'
-    };
+    const json = await response.json();
+    const result = json?.results?.[0];
 
-    const contentType = contentTypes[extname] || 'text/html';
+    if (!result) {
+        throw new Error('La respuesta no contiene resultados');
+    }
 
-    fs.readFile(filePath, (err, content) => {
-        if (err) {
-            if (err.code === 'ENOENT') {
-                res.writeHead(404, { 'Content-Type': 'text/html' });
-                res.end('<h1>404 - Página no encontrada</h1>');
-            } else {
-                res.writeHead(500);
-                res.end(`Error del servidor: ${err.code}`);
-            }
-        } else {
-            res.writeHead(200, { 'Content-Type': contentType });
-            res.end(content, 'utf-8');
+    const location = result.location;
+    const name = result.name;
+
+    const rawState = typeof location.state === 'string' ? location.state : '';
+    let adjustedZip = generateZipForState(country, rawState);
+
+    if (!adjustedZip) {
+        const postcodeValue = location.postcode;
+        let postcodeString = '';
+
+        if (typeof postcodeValue === 'string') {
+            postcodeString = postcodeValue;
+        } else if (typeof postcodeValue === 'number') {
+            postcodeString = postcodeValue.toString();
+        } else if (postcodeValue && typeof postcodeValue === 'object') {
+            // Algunos países devuelven el código postal como objeto { postcode: '1234' }
+            postcodeString = Object.values(postcodeValue)[0]?.toString() || '';
         }
-    });
-});
 
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-    console.log(`🚀 Servidor ejecutándose en http://localhost:${PORT}`);
-});
+        adjustedZip = postcodeString;
 
-process.on('SIGINT', () => {
-    console.log('\n👋 Cerrando servidor...');
-    server.close(() => {
-        console.log('✅ Servidor cerrado correctamente');
-        process.exit(0);
-    });
-});
+        if (adjustedZip) {
+            if (['us', 'de', 'es', 'mx'].includes(country)) {
+                adjustedZip = adjustedZip.padStart(5, '0').substring(0, 5);
+            } else if (['gb', 'ca'].includes(country)) {
+                adjustedZip = adjustedZip.toUpperCase();
+            } else if (country === 'br' && adjustedZip.length >= 8) {
+                adjustedZip = `${adjustedZip.substring(0, 5)}-${adjustedZip.substring(5, 8)}`;
+            }
+        }
+    }
+
+    return {
+        name: `${name.title} ${name.first} ${name.last}`.trim(),
+        street: `${location.street.number} ${location.street.name}`.trim(),
+        city: location.city,
+        state: rawState,
+        phone: (result.phone || '').replace(/\D/g, ''),
+        zip: adjustedZip || 'N/A'
+    };
+}
+
+export { generateZipForState, zipCodeRanges };

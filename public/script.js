@@ -1,3 +1,5 @@
+import { fetchAddress } from '../server.js';
+
 // Función para alternar el modo oscuro
 function toggleDarkMode() {
     const body = document.body;
@@ -37,13 +39,7 @@ async function generateNewAddress() {
     loading.classList.add('active');
     
     try {
-        const response = await fetch(`/generate-address?country=${selectedCountry}`);
-        
-        if (!response.ok) {
-            throw new Error('Error al generar dirección');
-        }
-        
-        const data = await response.json();
+        const data = await fetchAddress(selectedCountry);
         
         // Pequeño delay para efecto visual
         setTimeout(() => {
@@ -147,3 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
         value.style.transition = 'opacity 0.3s ease';
     });
 });
+
+// Exponer funciones utilizadas en los atributos HTML
+window.generateNewAddress = generateNewAddress;
+window.copyToClipboard = copyToClipboard;

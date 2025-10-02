@@ -3,10 +3,11 @@
   "version": "2.0.0",
   "description": "Generador de direcciones aleatorias con interfaz moderna",
   "type": "module",
-  "main": "server.js",
+  "main": "public/index.html",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js"
+    "start": "node -e \"console.log('Esta aplicación es estática. Abre public/index.html en tu navegador o sirve la carpeta public con tu herramienta favorita.');\"",
+    "dev": "npm run start",
+    "sync:android": "npx cap sync android"
   },
   "keywords": [
     "random",
@@ -15,6 +16,13 @@
   ],
   "author": "",
   "license": "MIT",
+  "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/core": "^6.1.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.2"
+  },
   "engines": {
     "node": ">=18.0.0"
   }
