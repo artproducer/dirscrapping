@@ -48,6 +48,12 @@ El resultado quedará en `app/build/outputs/apk/debug/app-debug.apk`.
 - Ajusta el nombre de la app editando `android/app/src/main/res/values/strings.xml`.
 - La pantalla principal está definida en `MainActivity.java` y `activity_main.xml`. Puedes habilitar funcionalidades nativas adicionales desde allí.
 
+## Base de datos local y funcionamiento sin conexión
+
+- Las direcciones aleatorias ya no dependen de la API de `randomuser.me`. Todos los datos se generan con la base local definida en `public/offline-database.js` (copiada automáticamente a `android/app/src/main/assets/www/offline-database.js`).
+- Puedes ampliar o ajustar los nombres, ciudades, códigos postales y formatos telefónicos editando ese archivo; la app seguirá funcionando sin conexión una vez compilada.
+- Si agregas nuevos países al selector en `index.html`, recuerda incluir sus entradas en `offline-database.js` para mantener la experiencia offline.
+
 ## Actualización de los assets
 
 Para mantener sincronizados los archivos de la web dentro de la APK, ejecuta después de cada cambio:

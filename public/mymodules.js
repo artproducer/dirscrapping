@@ -1,5 +1,7 @@
 // app.js (ESM para navegador)
 
+import { getRandomOfflineAddress } from './offline-database.js';
+
 /**
  * Mapeo de códigos postales por estado/región para diferentes países
  * (idéntico al de tu servidor)
@@ -160,114 +162,40 @@ export function generateZipForState(country, state) {
 }
 
 /**
- * Convierte código país a formato soportado por randomuser.me NAT.
- * Si no se reconoce, devuelve null (y no se filtra por nacionalidad).
- */
-function natForRandomUser(country) {
-  if (!country) return null;
-  const c = country.toLowerCase();
-
-  // Lista común de NAT en randomuser (no exhaustiva).
-  const map = {
-    us: "US",
-    de: "DE",
-    es: "ES",
-    gb: "GB",
-    br: "BR",
-    ca: "CA",
-    fr: "FR",
-    nl: "NL",
-    dk: "DK",
-    fi: "FI",
-    ie: "IE",
-    no: "NO",
-    nz: "NZ",
-    tr: "TR",
-    ch: "CH",
-    au: "AU",
-    mx: "MX" // Random User ha incluido MX; si no, simplemente no pases NAT.
-  };
-
-  return map[c] || null;
-}
-
-/**
- * Obtiene una dirección desde Random User y la adapta a tu formato,
- * generando ZIP coherente según país/estado cuando sea posible.
+ * Obtiene una dirección simulada desde la base local y la adapta al formato
+ * usado en la interfaz, generando un ZIP coherente si aplica.
  */
 export async function fetchAddress(country = "us") {
+  const normalizedCountry = (country || "us").toLowerCase();
+  const offlineEntry = getRandomOfflineAddress(normalizedCountry);
+
+  const nameParts = [offlineEntry.title, offlineEntry.firstName, offlineEntry.lastName]
+    .map(part => (part || "").trim())
+    .filter(part => part.length > 0);
+
+  const streetParts = [offlineEntry.streetNumber, offlineEntry.streetName]
+    .map(part => (part ?? "").toString().trim())
+    .filter(part => part.length > 0);
+
+  const computedZip = offlineEntry.zip ?? generateZipForState(normalizedCountry, offlineEntry.state);
+  const phoneDigits = String(offlineEntry.phone ?? "").replace(/\D/g, "");
+
+  const addressData = {
+    name: nameParts.join(" ").trim() || "N/A",
+    street: streetParts.join(" ").trim() || "N/A",
+    city: offlineEntry.city || "N/A",
+    state: offlineEntry.state || "N/A",
+    phone: phoneDigits || "N/A",
+    zip: computedZip ? String(computedZip) : "N/A"
+  };
+
   try {
-    const nat = natForRandomUser(country);
-    const url = new URL("https://randomuser.me/api/");
-    if (nat) url.searchParams.set("nat", nat);
-    url.searchParams.set("inc", "name,location,phone");
-
-    const res = await fetch(url.toString(), {
-      headers: { "User-Agent": "Mozilla/5.0" }
-    });
-    const json = await res.json();
-    const result = json?.results?.[0];
-    const location = result?.location ?? {};
-    const name = result?.name ?? {};
-
-    // postcode puede llegar como número o string
-    let apiPostcode = location.postcode;
-    if (apiPostcode == null) apiPostcode = "";
-
-    let adjustedZip = generateZipForState(country, location.state);
-
-    if (!adjustedZip) {
-      // fallback: usar el de la API y formatear
-      adjustedZip = String(apiPostcode);
-
-      const c = (country || "").toLowerCase();
-      if (["us", "de", "es", "mx"].includes(c)) {
-        adjustedZip = adjustedZip.replace(/\D/g, "").padStart(5, "0").substring(0, 5);
-      } else if (["gb", "ca"].includes(c)) {
-        adjustedZip = adjustedZip.toUpperCase();
-      } else if (c === "br") {
-        const digits = adjustedZip.replace(/\D/g, "");
-        if (digits.length >= 8) {
-          adjustedZip = digits.substring(0, 5) + "-" + digits.substring(5, 8);
-        } else {
-          adjustedZip = digits;
-        }
-      }
-    }
-
-    const addressData = {
-      name: `${name.title ?? ""} ${name.first ?? ""} ${name.last ?? ""}`.trim(),
-      street: `${location.street?.number ?? ""} ${location.street?.name ?? ""}`.trim(),
-      city: location.city ?? "",
-      state: location.state ?? "",
-      phone: String(result?.phone ?? "").replace(/\D/g, ""),
-      zip: adjustedZip
-    };
-
-    // Guarda también en localStorage para que “persista” en el navegador
-    try {
-      localStorage.setItem("address.json", JSON.stringify(addressData));
-    } catch {
-      // Ignorar si storage está bloqueado
-    }
-
-    return addressData;
-  } catch (err) {
-    console.error("Error fetching address:", err);
-    // Devolver el mismo fallback que tenías en el servidor
-    const fallback = {
-      name: "N/A",
-      street: "N/A",
-      city: "N/A",
-      state: "N/A",
-      phone: "N/A",
-      zip: "N/A"
-    };
-    try {
-      localStorage.setItem("address.json", JSON.stringify(fallback));
-    } catch {}
-    return fallback;
+    localStorage.setItem("address.json", JSON.stringify(addressData));
+  } catch {
+    // Ignorar si storage está bloqueado
   }
+
+  return addressData;
 }
 
 /** 
