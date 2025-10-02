@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="http://schemas.android.com/tools">
+    <color name="backgroundColor">#FFFFFF</color>
+    <color name="primaryColor">#121212</color>
+    <color name="secondaryColor">#1E88E5</color>
+    <string name="app_name">Generador de Direcciones</string>
+    <style name="Theme.DirScrapping" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryVariant">@color/primaryColor</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorSecondary">@color/secondaryColor</item>
+        <item name="android:statusBarColor" ns1:targetApi="l">?attr/colorPrimaryVariant</item>
+    </style>
+</resources>
