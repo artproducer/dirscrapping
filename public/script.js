@@ -48,6 +48,7 @@ async function generateNewAddress() {
         // Pequeño delay para efecto visual
         setTimeout(() => {
             // Actualizar datos con animación
+            updateFieldWithAnimation('name', data.name);
             updateFieldWithAnimation('street', data.street);
             updateFieldWithAnimation('city', data.city);
             updateFieldWithAnimation('state', data.state);
