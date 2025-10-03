@@ -1,16 +1,16 @@
 :root {
   color-scheme: light dark;
-  --primary: #6750a4;
-  --primary-dark: #d0bcff;
+  --primary: #0f6cbd;
+  --primary-dark: #82c6ff;
   --surface: #ffffff;
-  --surface-dark: #1f1f27;
-  --background: #f3f1f7;
-  --background-dark: #121219;
-  --text: #1c1b1f;
-  --text-dark: #f5f5f9;
-  --border: rgba(103, 80, 164, 0.24);
-  --border-dark: rgba(208, 188, 255, 0.32);
-  --error: #ff6b6b;
+  --surface-dark: #1a2433;
+  --background: #f1f5fb;
+  --background-dark: #0c111f;
+  --text: #101828;
+  --text-dark: #f3f8ff;
+  --border: rgba(15, 108, 189, 0.26);
+  --border-dark: rgba(130, 198, 255, 0.36);
+  --error: #ff4c4c;
   --success: #22c55e;
   font-family: "Inter", "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -40,8 +40,8 @@ body.dark-mode {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(circle at 20% 20%, rgba(103, 80, 164, 0.16), transparent 55%),
-    radial-gradient(circle at 80% 0%, rgba(0, 168, 150, 0.14), transparent 45%);
+  background: radial-gradient(circle at 20% 20%, rgba(15, 108, 189, 0.16), transparent 55%),
+    radial-gradient(circle at 80% 0%, rgba(12, 36, 90, 0.14), transparent 45%);
   z-index: 0;
 }
 
@@ -51,7 +51,7 @@ body.dark-mode {
   background: var(--surface);
   border-radius: 28px;
   padding: 24px;
-  box-shadow: 0 32px 96px rgba(18, 16, 37, 0.18);
+  box-shadow: 0 32px 96px rgba(15, 35, 68, 0.24);
   z-index: 1;
   display: flex;
   flex-direction: column;
@@ -77,7 +77,7 @@ body.dark-mode .container {
   gap: 12px;
   border-radius: 50px;
   padding: 8px 16px;
-  background: linear-gradient(135deg, rgba(103, 80, 164, 0.16), rgba(0, 168, 150, 0.12));
+  background: linear-gradient(135deg, rgba(15, 108, 189, 0.16), rgba(12, 36, 90, 0.12));
   color: var(--text);
   text-decoration: none;
   /* elimina subrayado del enlace */
@@ -88,11 +88,11 @@ body.dark-mode .container {
 
 .title-container:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(103, 80, 164, 0.18);
+  box-shadow: 0 6px 18px rgba(15, 108, 189, 0.18);
 }
 
 body.dark-mode .title-container {
-  background: linear-gradient(135deg, rgba(103, 80, 164, 0.28), rgba(0, 168, 150, 0.22));
+  background: linear-gradient(135deg, rgba(15, 108, 189, 0.28), rgba(12, 36, 90, 0.22));
   color: var(--text-dark);
 }
 
@@ -106,7 +106,7 @@ body.dark-mode .title-container {
   /* 👈 añade espacio interno */
   border-radius: 50px;
   /* 👈 siempre súper redondeado */
-  background: linear-gradient(135deg, rgba(103, 80, 164, 0.16), rgba(0, 168, 150, 0.12));
+  background: linear-gradient(135deg, rgba(15, 108, 189, 0.16), rgba(12, 36, 90, 0.12));
 }
 
 
@@ -157,8 +157,8 @@ body.dark-mode .subtitle {
   min-height: 54px;
   padding: 0px 18px;
   border-radius: 18px;
-  border: 1px solid rgba(103, 80, 164, 0.28);
-  background: linear-gradient(135deg, rgba(103, 80, 164, 0.16), rgba(0, 168, 150, 0.12));
+  border: 1px solid rgba(15, 108, 189, 0.28);
+  background: linear-gradient(135deg, rgba(15, 108, 189, 0.16), rgba(12, 36, 90, 0.12));
   color: var(--primary);
   font-weight: 600;
   font-size: 1rem;
@@ -169,13 +169,13 @@ body.dark-mode .subtitle {
 
 .country-button:hover {
   transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(103, 80, 164, 0.18);
+  box-shadow: 0 8px 20px rgba(15, 108, 189, 0.18);
 }
 
 .country-button:focus-visible {
   outline: none;
   /* quita el rectángulo feo */
-  box-shadow: 0 0 0 3px rgba(103, 80, 164, 0.35);
+  box-shadow: 0 0 0 3px rgba(15, 108, 189, 0.35);
   /* halo suave y redondo */
 }
 
@@ -237,8 +237,8 @@ body.dark-mode .subtitle {
   width: 100%;
   min-height: 54px;
   border-radius: 18px;
-  border: 1px solid rgba(103, 80, 164, 0.22);
-  background: rgba(103, 80, 164, 0.12);
+  border: 1px solid rgba(15, 108, 189, 0.22);
+  background: rgba(15, 108, 189, 0.12);
   color: var(--primary);
   font-weight: 600;
   font-size: 0.95rem;
@@ -253,24 +253,24 @@ body.dark-mode .subtitle {
 
 .action-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(103, 80, 164, 0.18);
+  box-shadow: 0 8px 20px rgba(15, 108, 189, 0.18);
 }
 
 .action-btn:focus-visible {
   outline: none;
   /* quita el rectángulo feo */
-  box-shadow: 0 0 0 3px rgba(103, 80, 164, 0.35);
+  box-shadow: 0 0 0 3px rgba(15, 108, 189, 0.35);
   /* halo suave y redondo */
 }
 
 #new-address.action-btn {
-  background: linear-gradient(135deg, rgba(103, 80, 164, 0.16), rgba(0, 168, 150, 0.12));
-  border: 1px solid rgba(103, 80, 164, 0.22);
+  background: linear-gradient(135deg, rgba(15, 108, 189, 0.16), rgba(12, 36, 90, 0.12));
+  border: 1px solid rgba(15, 108, 189, 0.22);
 }
 
 #theme-toggle.action-btn {
-  background: linear-gradient(135deg, rgba(103, 80, 164, 0.16), rgba(0, 168, 150, 0.12));
-  border: 1px solid rgba(103, 80, 164, 0.22);
+  background: linear-gradient(135deg, rgba(15, 108, 189, 0.16), rgba(12, 36, 90, 0.12));
+  border: 1px solid rgba(15, 108, 189, 0.22);
 }
 
 .sr-only {
@@ -286,26 +286,26 @@ body.dark-mode .subtitle {
 }
 
 body.dark-mode .action-btn {
-  background: rgba(208, 188, 255, 0.14);
+  background: rgba(130, 198, 255, 0.14);
   color: var(--primary-dark);
-  border-color: rgba(208, 188, 255, 0.3);
+  border-color: rgba(130, 198, 255, 0.3);
 }
 
 body.dark-mode .country-button {
-  background: linear-gradient(135deg, rgba(103, 80, 164, 0.16), rgba(0, 168, 150, 0.12));
-  border-color: rgba(208, 188, 255, 0.35);
+  background: linear-gradient(135deg, rgba(15, 108, 189, 0.16), rgba(12, 36, 90, 0.12));
+  border-color: rgba(130, 198, 255, 0.35);
   color: var(--primary-dark);
 }
 
 body.dark-mode #new-address.action-btn {
-  background: linear-gradient(135deg, rgba(103, 80, 164, 0.16), rgba(0, 168, 150, 0.12));
-  border-color: rgba(208, 188, 255, 0.32);
+  background: linear-gradient(135deg, rgba(15, 108, 189, 0.16), rgba(12, 36, 90, 0.12));
+  border-color: rgba(130, 198, 255, 0.32);
 }
 
 body.dark-mode #theme-toggle.action-btn {
-  background: linear-gradient(135deg, rgba(103, 80, 164, 0.16), rgba(0, 168, 150, 0.12));
+  background: linear-gradient(135deg, rgba(15, 108, 189, 0.16), rgba(12, 36, 90, 0.12));
 
-  border-color: rgba(208, 188, 255, 0.32);
+  border-color: rgba(130, 198, 255, 0.32);
 }
 
 .action-btn .sun-icon {
@@ -328,14 +328,14 @@ body.dark-mode #theme-toggle .sun-icon {
   position: relative;
   border-radius: 28px;
   padding: 22px;
-  background: linear-gradient(135deg, rgba(103, 80, 164, 0.16), rgba(0, 168, 150, 0.12));
+  background: linear-gradient(135deg, rgba(15, 108, 189, 0.16), rgba(12, 36, 90, 0.12));
   display: flex;
   flex-direction: column;
   gap: 18px;
 }
 
 body.dark-mode .address-card {
-  background: linear-gradient(135deg, rgba(103, 80, 164, 0.28), rgba(0, 168, 150, 0.22));
+  background: linear-gradient(135deg, rgba(15, 108, 189, 0.28), rgba(12, 36, 90, 0.22));
 }
 
 .field-group {
@@ -378,13 +378,13 @@ body.dark-mode .field label {
   padding: 9px 16px;
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.65);
-  border: 1px solid rgba(103, 80, 164, 0.18);
+  border: 1px solid rgba(15, 108, 189, 0.18);
   transition: background 0.3s ease, border-color 0.3s ease;
 }
 
 body.dark-mode .value-container {
-  background: rgba(21, 21, 27, 0.6);
-  border-color: rgba(208, 188, 255, 0.22);
+  background: rgba(16, 24, 38, 0.65);
+  border-color: rgba(130, 198, 255, 0.22);
 }
 
 .value {
@@ -398,7 +398,7 @@ body.dark-mode .value-container {
   border: none;
   border-radius: 12px;
   padding: 8px 12px;
-  background: rgba(103, 80, 164, 0.18);
+  background: rgba(15, 108, 189, 0.18);
   color: var(--primary);
   cursor: pointer;
   display: inline-flex;
@@ -409,7 +409,7 @@ body.dark-mode .value-container {
 
 .copy-btn:hover {
   transform: translateY(-1px);
-  background: rgba(103, 80, 164, 0.26);
+  background: rgba(15, 108, 189, 0.26);
 }
 
 .toast {
@@ -464,7 +464,7 @@ body.dark-mode .loading-overlay {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 4px solid rgba(103, 80, 164, 0.2);
+  border: 4px solid rgba(15, 108, 189, 0.2);
   border-top-color: var(--primary);
   animation: spin 0.8s linear infinite;
 }
@@ -506,7 +506,7 @@ body.dark-mode .loading-overlay {
     border-radius: inherit;
     /* 👈 hereda el borde redondeado */
     background: radial-gradient(circle at var(--ripple-x, 50%) var(--ripple-y, 50%),
-        rgba(103, 80, 164, .25) 0, rgba(103, 80, 164, .25) 40%, transparent 41%);
+        rgba(15, 108, 189, .25) 0, rgba(15, 108, 189, .25) 40%, transparent 41%);
     transform: scale(0);
     opacity: 0;
     transition: transform .35s ease, opacity .6s ease;
@@ -520,3 +520,4 @@ body.dark-mode .loading-overlay {
   }
 
 }
+
