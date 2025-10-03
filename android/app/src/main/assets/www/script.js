@@ -259,8 +259,20 @@
       meta.setAttribute('name', 'theme-color');
       document.head.appendChild(meta);
     }
-    const bg = getCurrentBackgroundColor() || (document.body.classList.contains('dark-mode') ? '#121219' : '#f3f1f7');
+
+    const isDarkMode = document.body.classList.contains('dark-mode');
+    const fallbackColor = isDarkMode ? '#041317' : '#edf7f8';
+    const bg = getCurrentBackgroundColor() || fallbackColor;
+
     meta.setAttribute('content', bg);
+
+    if (window.Android && typeof window.Android.setStatusBarColor === 'function') {
+      try {
+        window.Android.setStatusBarColor(bg, !isDarkMode);
+      } catch (err) {
+        console.warn('StatusBarColorUpdateError', err);
+      }
+    }
   }
 
 
@@ -344,33 +356,6 @@
       btn.style.setProperty('--ripple-y', `${e.clientY - r.top}px`);
     });
   });
-
-  function openTelegramDeepLink(username = "artistaproducer") {
-    const tg = "tg://resolve?domain=" + encodeURIComponent(username);
-    const intent = "intent://resolve?domain=" + encodeURIComponent(username) +
-      "#Intent;scheme=tg;package=org.telegram.messenger;" +
-      "S.browser_fallback_url=" + encodeURIComponent("https://t.me/" + username) +
-      ";end";
-
-    const isAndroid = /Android/i.test(navigator.userAgent || "");
-
-    // 1º intento: tg:// (abre app si está instalada)
-    // 2º intento: intent:// en Android (con fallback a https)
-    // 3º intento: https (navegador) si no hay app
-    try {
-      window.location.href = tg;
-      setTimeout(() => {
-        if (isAndroid) {
-          window.location.href = intent;
-        } else {
-          window.location.href = "https://t.me/" + username;
-        }
-      }, 800);
-    } catch (e) {
-      window.location.href = "https://t.me/" + username;
-    }
-    return false; // evita navegación del <a>
-  }
   window.generateNewAddress = generateNewAddress;
   window.copyToClipboard = copyToClipboard;
   window.fetchAddress = fetchAddress;

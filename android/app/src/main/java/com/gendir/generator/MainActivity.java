@@ -1,19 +1,25 @@
 package com.gendir.generator;
 
 import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
+import android.view.Window;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowInsetsControllerCompat;
+
+import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity {
     private WebView webView;
@@ -34,7 +40,10 @@ public class MainActivity extends AppCompatActivity {
 
         webView.setWebChromeClient(new WebChromeClient());
         webView.setWebViewClient(new WebViewClient());
-        webView.addJavascriptInterface(new ClipboardBridge(this), "Android");
+
+        NativeBridge bridge = new NativeBridge(this);
+        webView.addJavascriptInterface(bridge, "Android");
+        bridge.applyStatusBarColor("#edf7f8", true);
 
         webView.loadUrl("file:///android_asset/www/index.html");
     }
@@ -48,21 +57,52 @@ public class MainActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    private static class ClipboardBridge {
-        private final Context context;
+    private static class NativeBridge {
+        private final WeakReference<MainActivity> activityRef;
+        private final Context appContext;
 
-        ClipboardBridge(Context context) {
-            this.context = context.getApplicationContext();
+        NativeBridge(MainActivity activity) {
+            this.activityRef = new WeakReference<>(activity);
+            this.appContext = activity.getApplicationContext();
         }
 
         @JavascriptInterface
         public void copyToClipboard(String text) {
-            ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipboardManager clipboard = (ClipboardManager) appContext.getSystemService(Context.CLIPBOARD_SERVICE);
             if (clipboard == null) {
                 return;
             }
             ClipData clip = ClipData.newPlainText("Dirección", text == null ? "" : text);
             clipboard.setPrimaryClip(clip);
+        }
+
+        @JavascriptInterface
+        public void setStatusBarColor(String color, boolean useDarkIcons) {
+            applyStatusBarColor(color, useDarkIcons);
+        }
+
+        void applyStatusBarColor(String color, boolean useDarkIcons) {
+            MainActivity activity = activityRef.get();
+            if (activity == null) {
+                return;
+            }
+
+            activity.runOnUiThread(() -> {
+                Window window = activity.getWindow();
+                if (window == null) {
+                    return;
+                }
+
+                try {
+                    window.setStatusBarColor(Color.parseColor(color));
+                } catch (IllegalArgumentException ignored) {
+                    // Si el color no es válido, no hacemos nada
+                }
+
+                View decorView = window.getDecorView();
+                WindowInsetsControllerCompat controller = new WindowInsetsControllerCompat(window, decorView);
+                controller.setAppearanceLightStatusBars(useDarkIcons);
+            });
         }
     }
 }
