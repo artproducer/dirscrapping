@@ -5,7 +5,7 @@ Este repositorio ahora incluye un proyecto Android nativo que empaqueta la aplic
 ## Estructura clave
 
 - `android/` – Proyecto Android (Gradle) que renderiza el contenido HTML/JS desde `android/app/src/main/assets/www/`.
-- `android/app/src/main/java/com/example/dirscrapping/MainActivity.java` – Actividad principal con el `WebView` y un puente JavaScript para copiar texto al portapapeles.
+- `android/app/src/main/java/com/gendir/generator/MainActivity.java` – Actividad principal con el `WebView` y un puente JavaScript para copiar texto al portapapeles.
 - `android/app/src/main/assets/www/` – Archivos estáticos de la aplicación (HTML, CSS y JS).
 
 ## Requisitos previos

@@ -1,4 +1,4 @@
-package com.example.dirscrapping;
+package com.gendir.generator;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
