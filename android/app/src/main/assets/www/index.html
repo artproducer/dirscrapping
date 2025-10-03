@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Generador de Direcciones Aleatorias</title>
+    <title>GenDir · Generador de Direcciones</title>
 
     <!-- Estilos propios -->
     <link rel="stylesheet" href="styles.css" />
@@ -17,7 +17,7 @@
         .country-select-wrap {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .country-select-wrap .fi {
@@ -32,13 +32,13 @@
         .field-row.two-col {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
+            gap: 14px;
             width: 100%;
         }
 
         /* Asegura que el espacio entre filas quede equilibrado */
         .field-group>.field-row+.field-row {
-            margin-top: 16px;
+            margin-top: 12px;
         }
 
         @media (max-width: 720px) {
@@ -54,47 +54,19 @@
     <div class="background-pattern"></div>
 
     <div class="container">
-        <!-- Botón de tema -->
-        <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema">
-            <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2">
-                <circle cx="12" cy="12" r="5" />
-                <line x1="12" y1="1" x2="12" y2="3" />
-                <line x1="12" y1="21" x2="12" y2="23" />
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                <line x1="1" y1="12" x2="3" y2="12" />
-                <line x1="21" y1="12" x2="23" y2="12" />
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-            </svg>
-            <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-            </svg>
-        </button>
-
-        <!-- Header -->
-        <div class="header">
-            <h1>Generador de Direcciones</h1>
-            <p class="subtitle">Obtén datos aleatorios al instante</p>
-        </div>
-
-        <!-- Selector de país -->
-        <div class="country-selector">
-            <label for="country-select">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="2" y1="12" x2="22" y2="12" />
-                    <path
-                        d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                </svg>
-                Selecciona el país
-            </label>
-
-            <div class="country-select-wrap">
-                <span id="flag" class="fi fi-us" aria-hidden="true"></span>
-                <select id="country-select" onchange="generateNewAddress()">
+        <div class="top-actions" role="navigation" aria-label="Acciones principales">
+            <div class="action action-country">
+                <button id="country-button" class="action-btn country-button" type="button"
+                    aria-haspopup="listbox" aria-expanded="false">
+                    <span id="flag" class="fi fi-us" aria-hidden="true"></span>
+                    <span id="country-label" class="action-text">Estados Unidos</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" aria-hidden="true">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+                <label for="country-select" class="sr-only">Seleccionar país</label>
+                <select id="country-select" class="country-select" onchange="generateNewAddress()">
                     <option value="us" selected>Estados Unidos</option>
                     <option value="de">Alemania</option>
                     <option value="gb">Reino Unido</option>
@@ -115,6 +87,44 @@
                     <option value="in">India</option>
                 </select>
             </div>
+
+            <div class="action action-refresh">
+                <button class="action-btn icon-only" id="new-address" type="button" onclick="generateNewAddress()"
+                    aria-label="Generar nueva dirección" title="Generar nueva dirección">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        aria-hidden="true">
+                        <polyline points="23 4 23 10 17 10" />
+                        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="action action-theme">
+                <button id="theme-toggle" class="action-btn icon-only" type="button" aria-label="Cambiar tema">
+                    <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <circle cx="12" cy="12" r="5" />
+                        <line x1="12" y1="1" x2="12" y2="3" />
+                        <line x1="12" y1="21" x2="12" y2="23" />
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                        <line x1="1" y1="12" x2="3" y2="12" />
+                        <line x1="21" y1="12" x2="23" y2="12" />
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                    </svg>
+                    <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+            <h1>GenDir</h1>
+            <p class="subtitle">Direcciones aleatorias al instante</p>
         </div>
 
         <!-- Tarjeta de dirección -->
@@ -275,15 +285,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Botón generar -->
-        <button class="generate-btn" onclick="generateNewAddress()">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="23 4 23 10 17 10" />
-                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
-            </svg>
-            Generar Dirección
-        </button>
 
         <!-- Toast -->
         <div class="toast" id="toast">

@@ -1,11 +1,13 @@
-apply plugin: 'com.android.application'
+plugins {
+    id("com.android.application")
+}
 
 android {
-    namespace 'com.example.dirscrapping'
+    namespace 'com.gendir.generator'
     compileSdkVersion 34
 
     defaultConfig {
-        applicationId "com.example.dirscrapping"
+        applicationId "com.gendir.generator"
         minSdkVersion 23
         targetSdkVersion 34
         versionCode 1
