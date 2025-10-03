@@ -62,6 +62,7 @@
     if (countryButton) {
       const aria = readable ? `Cambiar país (actual: ${readable})` : "Cambiar país";
       countryButton.setAttribute("aria-label", aria);
+      countryButton.setAttribute("title", aria);
       countryButton.setAttribute("aria-expanded", "false");
     }
   }

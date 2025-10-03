@@ -12,42 +12,6 @@
     <!-- Banderas (flag-icons) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons/css/flag-icons.min.css" />
 
-    <!-- Ajustes mínimos para banderas y grilla 2 columnas -->
-    <style>
-        .country-select-wrap {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .country-select-wrap .fi {
-            width: 24px;
-            height: 18px;
-            border-radius: 3px;
-            box-shadow: 0 0 0 1px rgba(0, 0, 0, .08), 0 1px 2px rgba(0, 0, 0, .06);
-            flex: 0 0 auto;
-        }
-
-        /* --- NUEVO: grilla para 2 columnas --- */
-        .field-row.two-col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            width: 100%;
-        }
-
-        /* Asegura que el espacio entre filas quede equilibrado */
-        .field-group>.field-row+.field-row {
-            margin-top: 12px;
-        }
-
-        @media (max-width: 720px) {
-            .field-row.two-col {
-                grid-template-columns: 1fr;
-                /* Se apilan en móviles */
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -55,13 +19,15 @@
 
     <div class="container">
         <div class="top-actions" role="navigation" aria-label="Acciones principales">
-            <div class="action action-country">
-                <button id="country-button" class="action-btn country-button" type="button"
-                    aria-haspopup="listbox" aria-expanded="false">
-                    <span id="country-label" class="sr-only">Estados Unidos</span>
-                    <span id="flag" class="fi fi-us" aria-hidden="true"></span>
+            <div class="country-control">
+                <button id="country-button" class="country-button" type="button" aria-haspopup="listbox"
+                    aria-expanded="false">
+                    <span class="country-button-content">
+                        <span id="flag" class="fi fi-us" aria-hidden="true"></span>
+                        <span id="country-label" class="country-label">Estados Unidos</span>
+                    </span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2" aria-hidden="true">
+                        stroke-width="2" aria-hidden="true" class="chevron-icon">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                 </button>
@@ -88,8 +54,8 @@
                 </select>
             </div>
 
-            <div class="action action-refresh">
-                <button class="action-btn icon-only" id="new-address" type="button" onclick="generateNewAddress()"
+            <div class="action-grid">
+                <button class="action-btn" id="new-address" type="button" onclick="generateNewAddress()"
                     aria-label="Generar nueva dirección" title="Generar nueva dirección">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         aria-hidden="true">
@@ -97,10 +63,8 @@
                         <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
                     </svg>
                 </button>
-            </div>
 
-            <div class="action action-theme">
-                <button id="theme-toggle" class="action-btn icon-only" type="button" aria-label="Cambiar tema">
+                <button id="theme-toggle" class="action-btn" type="button" aria-label="Cambiar tema">
                     <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2">
                         <circle cx="12" cy="12" r="5" />

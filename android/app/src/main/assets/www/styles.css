@@ -12,7 +12,6 @@
   --border-dark: rgba(208, 188, 255, 0.32);
   --error: #ff6b6b;
   --success: #22c55e;
-  --action-control-size: 48px;
   font-family: "Inter", "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
@@ -91,38 +90,108 @@ body.dark-mode .subtitle {
   color: rgba(245, 245, 249, 0.74);
 }
 
+
 .top-actions {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  justify-content: flex-start;
-  flex-wrap: nowrap;
+  flex-direction: column;
+  gap: 12px;
   width: 100%;
 }
 
-.action {
+.country-control {
   position: relative;
-  flex: 0 0 var(--action-control-size);
-  width: var(--action-control-size);
-  height: var(--action-control-size);
-  display: flex;
+  width: 100%;
 }
 
-.action-country {
+.country-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 54px;
+  padding: 0 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(103, 80, 164, 0.28);
+  background: rgba(103, 80, 164, 0.12);
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.3s ease;
+  text-align: left;
+}
+
+.country-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(103, 80, 164, 0.18);
+}
+
+.country-button:focus-visible {
+  outline: 3px solid rgba(103, 80, 164, 0.35);
+  outline-offset: 2px;
+}
+
+.country-button-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
   min-width: 0;
+}
+
+.country-label {
+  display: block;
+  font-size: 1rem;
+  line-height: 1.2;
+  color: currentColor;
+  overflow-wrap: anywhere;
+}
+
+.country-button .fi {
+  width: 28px;
+  height: 20px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+}
+
+.chevron-icon {
+  flex: 0 0 auto;
+}
+
+.country-select {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  border: 0;
+  cursor: pointer;
+  appearance: none;
+  pointer-events: none;
+}
+
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+}
+
+@media (max-width: 460px) {
+  .action-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .action-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 8px;
   width: 100%;
-  height: 100%;
-  padding: 0;
-  border-radius: 16px;
-  border: 1px solid transparent;
-  background: rgba(103, 80, 164, 0.08);
+  min-height: 54px;
+  border-radius: 18px;
+  border: 1px solid rgba(103, 80, 164, 0.22);
+  background: rgba(103, 80, 164, 0.12);
   color: var(--primary);
   font-weight: 600;
   font-size: 0.95rem;
@@ -145,51 +214,14 @@ body.dark-mode .subtitle {
   outline-offset: 2px;
 }
 
-.action-btn.icon-only {
-  padding: 0;
-}
-
-.action-refresh .action-btn {
+#new-address.action-btn {
   background: linear-gradient(135deg, rgba(103, 80, 164, 0.18), rgba(0, 168, 150, 0.18));
   border: 1px solid rgba(103, 80, 164, 0.35);
 }
 
-.action-theme .action-btn {
+#theme-toggle.action-btn {
   background: rgba(103, 80, 164, 0.12);
   border: 1px solid rgba(103, 80, 164, 0.22);
-}
-
-.country-button {
-  min-width: 0;
-  justify-content: center;
-  background: rgba(103, 80, 164, 0.12);
-}
-
-.country-button svg {
-  margin-left: 0;
-  width: 16px;
-  height: 16px;
-}
-
-.country-button .fi {
-  width: 24px;
-  height: 18px;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
-}
-
-.action-text {
-  white-space: nowrap;
-}
-
-.country-select {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  border: 0;
-  cursor: pointer;
-  appearance: none;
-  pointer-events: none;
 }
 
 .sr-only {
@@ -205,26 +237,25 @@ body.dark-mode .subtitle {
 }
 
 body.dark-mode .action-btn {
-  background: rgba(208, 188, 255, 0.12);
+  background: rgba(208, 188, 255, 0.14);
   color: var(--primary-dark);
+  border-color: rgba(208, 188, 255, 0.3);
 }
 
 body.dark-mode .country-button {
   background: rgba(208, 188, 255, 0.2);
-}
-
-body.dark-mode .action-btn.icon-only {
+  border-color: rgba(208, 188, 255, 0.35);
   color: var(--primary-dark);
 }
 
-body.dark-mode .action-refresh .action-btn {
+body.dark-mode #new-address.action-btn {
   background: linear-gradient(135deg, rgba(208, 188, 255, 0.28), rgba(0, 168, 150, 0.28));
-  border: 1px solid rgba(208, 188, 255, 0.35);
+  border-color: rgba(208, 188, 255, 0.35);
 }
 
-body.dark-mode .action-theme .action-btn {
+body.dark-mode #theme-toggle.action-btn {
   background: rgba(208, 188, 255, 0.24);
-  border: 1px solid rgba(208, 188, 255, 0.32);
+  border-color: rgba(208, 188, 255, 0.32);
 }
 
 .action-btn .sun-icon {
@@ -409,16 +440,7 @@ body.dark-mode .loading-overlay {
   }
 
   .top-actions {
-    flex-wrap: wrap;
     gap: 10px;
-  }
-
-  .action {
-    flex: 1 1 calc(50% - 10px);
-  }
-
-  .action-theme {
-    flex: 0 0 auto;
   }
 
   .address-card {
