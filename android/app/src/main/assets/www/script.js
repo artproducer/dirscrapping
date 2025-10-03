@@ -21,6 +21,16 @@
 
   function toggleDarkMode() {
     document.body.classList.toggle("dark-mode");
+    updateThemeColorMeta(); // <-- importante
+  }
+
+  const mql = window.matchMedia('(prefers-color-scheme: dark)');
+  if (mql && mql.addEventListener) {
+    mql.addEventListener('change', () => {
+      // si usas preferencia del sistema sin persistencia, podrías reflejarlo:
+      // document.body.classList.toggle('dark-mode', mql.matches);
+      updateThemeColorMeta();
+    });
   }
 
   function loadDarkModePreference() {
@@ -28,10 +38,10 @@
       if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
         document.body.classList.add("dark-mode");
       }
-    } catch (err) {
-      // ignore
-    }
+    } catch (err) { /* ignore */ }
+    updateThemeColorMeta(); // <-- importante
   }
+
 
   const themeToggle = document.getElementById("theme-toggle");
   if (themeToggle) {
@@ -130,10 +140,6 @@
 
   function buildName(entry) {
     const parts = [];
-    if (entry && entry.title) {
-      const title = String(entry.title).trim();
-      if (title) parts.push(title);
-    }
     if (entry && entry.firstName) {
       const first = String(entry.firstName).trim();
       if (first) parts.push(first);
@@ -239,6 +245,25 @@
     }, 150);
   }
 
+  function getCurrentBackgroundColor() {
+    const isDark = document.body.classList.contains('dark-mode');
+    return getComputedStyle(document.body)
+      .getPropertyValue(isDark ? '--background-dark' : '--background')
+      .trim();
+  }
+
+  function updateThemeColorMeta() {
+    let meta = document.querySelector('meta[name="theme-color"]');
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.setAttribute('name', 'theme-color');
+      document.head.appendChild(meta);
+    }
+    const bg = getCurrentBackgroundColor() || (document.body.classList.contains('dark-mode') ? '#121219' : '#f3f1f7');
+    meta.setAttribute('content', bg);
+  }
+
+
   async function copyToClipboard(fieldId, event) {
     const element = document.getElementById(fieldId);
     const text = element && element.textContent ? element.textContent.trim() : "";
@@ -247,36 +272,6 @@
       showToast("No hay datos para copiar", true);
       return;
     }
-
-    (function () {
-      const meta = document.querySelector('meta[name="theme-color"]');
-
-      function applyThemeColor() {
-        const isDark = document.body.classList.contains('dark-mode');
-        const bg = getComputedStyle(document.body)
-          .getPropertyValue(isDark ? '--background-dark' : '--background')
-          .trim();
-        meta.setAttribute('content', bg || (isDark ? '#121219' : '#f3f1f7'));
-      }
-
-      // Llamada inicial
-      applyThemeColor();
-
-      // Reaplicar cuando cambie el sistema
-      const mql = window.matchMedia('(prefers-color-scheme: dark)');
-      mql.addEventListener?.('change', applyThemeColor);
-
-      // Reaplicar cuando uses tu botón de tema
-      const themeBtn = document.getElementById('theme-toggle');
-      if (themeBtn) {
-        themeBtn.addEventListener('click', () => {
-          // aquí asumes que en otro lugar alternas la clase 'dark-mode' en <body>
-          // si no, alterna aquí:
-          // document.body.classList.toggle('dark-mode');
-          applyThemeColor();
-        });
-      }
-    })();
 
     try {
       if (androidClipboard) {
@@ -342,6 +337,40 @@
     generateNewAddress();
   });
 
+  document.querySelectorAll('.action-btn, .copy-btn').forEach(btn => {
+    btn.addEventListener('pointerdown', e => {
+      const r = btn.getBoundingClientRect();
+      btn.style.setProperty('--ripple-x', `${e.clientX - r.left}px`);
+      btn.style.setProperty('--ripple-y', `${e.clientY - r.top}px`);
+    });
+  });
+
+  function openTelegramDeepLink(username = "artistaproducer") {
+    const tg = "tg://resolve?domain=" + encodeURIComponent(username);
+    const intent = "intent://resolve?domain=" + encodeURIComponent(username) +
+      "#Intent;scheme=tg;package=org.telegram.messenger;" +
+      "S.browser_fallback_url=" + encodeURIComponent("https://t.me/" + username) +
+      ";end";
+
+    const isAndroid = /Android/i.test(navigator.userAgent || "");
+
+    // 1º intento: tg:// (abre app si está instalada)
+    // 2º intento: intent:// en Android (con fallback a https)
+    // 3º intento: https (navegador) si no hay app
+    try {
+      window.location.href = tg;
+      setTimeout(() => {
+        if (isAndroid) {
+          window.location.href = intent;
+        } else {
+          window.location.href = "https://t.me/" + username;
+        }
+      }, 800);
+    } catch (e) {
+      window.location.href = "https://t.me/" + username;
+    }
+    return false; // evita navegación del <a>
+  }
   window.generateNewAddress = generateNewAddress;
   window.copyToClipboard = copyToClipboard;
   window.fetchAddress = fetchAddress;

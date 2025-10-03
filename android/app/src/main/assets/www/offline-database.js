@@ -1,6 +1,5 @@
 const offlineAddressDatabase = {
   us: {
-    titles: ["Sr.", "Sra.", "Dr.", "Prof."],
     firstNames: [
       "Liam",
       "Olivia",
@@ -1156,7 +1155,6 @@ const offlineAddressDatabase = {
     phone: { suffixLength: 4 }
   },
   de: {
-    titles: ["Sr.", "Sra.", "Dr.", "Prof."],
     firstNames: [
       "Liam", "Olivia", "Noah", "Ava", "Ethan", "Sophia", "Mason", "Emma", "Logan", "Mia",
       "Lucas", "Amelia", "James", "Isabella", "Benjamin", "Charlotte", "Elijah", "Harper", "Alexander", "Evelyn",
@@ -1214,7 +1212,6 @@ const offlineAddressDatabase = {
     phone: { suffixLength: 3 }
   },
   gb: {
-    titles: ["Mr.", "Mrs.", "Ms.", "Dr."],
     firstNames: ["Oliver", "Amelia", "George", "Isla", "Harry", "Ava", "Jack", "Olivia"],
     lastNames: ["Smith", "Jones", "Taylor", "Brown", "Williams", "Wilson", "Davies", "Evans"],
     streets: [
@@ -1240,7 +1237,6 @@ const offlineAddressDatabase = {
     phone: { suffixLength: 5 }
   },
   ca: {
-    titles: ["Sr.", "Sra.", "Dr.", "Prof."],
     firstNames: ["Liam", "Emma", "Noah", "Olivia", "William", "Charlotte", "Benjamin", "Ava"],
     lastNames: ["Smith", "Brown", "Tremblay", "Roy", "Wilson", "Gagnon", "Clark", "Martin"],
     streets: [
@@ -1266,7 +1262,6 @@ const offlineAddressDatabase = {
     phone: { suffixLength: 4 }
   },
   au: {
-    titles: ["Mr.", "Mrs.", "Ms.", "Dr."],
     firstNames: ["Oliver", "Charlotte", "William", "Amelia", "Jack", "Isla", "Noah", "Sophie"],
     lastNames: ["Smith", "Jones", "Williams", "Brown", "Taylor", "Wilson", "Johnson", "Martin"],
     streets: [
@@ -1292,7 +1287,6 @@ const offlineAddressDatabase = {
     phone: { suffixLength: 4 }
   },
   fr: {
-    titles: ["M.", "Mme.", "Dr.", "Pr."],
     firstNames: ["Lucas", "Emma", "Louis", "Chloé", "Gabriel", "Camille", "Hugo", "Manon"],
     lastNames: ["Martin", "Bernard", "Dubois", "Thomas", "Robert", "Richard", "Petit", "Durand"],
     streets: [
@@ -1317,7 +1311,6 @@ const offlineAddressDatabase = {
     phone: { suffixLength: 4 }
   },
   es: {
-    titles: ["Sr.", "Sra.", "D.", "Dña."],
     firstNames: ["Lucas", "Martina", "Hugo", "Sofía", "Mateo", "Lucía", "Leo", "Valeria"],
     lastNames: ["García", "Martínez", "López", "Sánchez", "Rodríguez", "Fernández", "Gómez", "Pérez"],
     streets: [
@@ -1342,7 +1335,6 @@ const offlineAddressDatabase = {
     phone: { suffixLength: 4 }
   },
   br: {
-    titles: ["Sr.", "Sra.", "Dr.", "Dra."],
     firstNames: ["Miguel", "Helena", "Arthur", "Alice", "Heitor", "Laura", "Theo", "Valentina"],
     lastNames: ["Silva", "Santos", "Oliveira", "Souza", "Rodrigues", "Ferreira", "Almeida", "Costa"],
     streets: [
@@ -1367,7 +1359,6 @@ const offlineAddressDatabase = {
     phone: { suffixLength: 4 }
   },
   mx: {
-    titles: ["Sr.", "Sra.", "Ing.", "Lic."],
     firstNames: ["Juan", "María", "Luis", "Ana", "Carlos", "Fernanda", "Diego", "Valentina"],
     lastNames: ["Hernández", "García", "Martínez", "López", "González", "Rodríguez", "Pérez", "Sánchez"],
     streets: [
@@ -1392,7 +1383,6 @@ const offlineAddressDatabase = {
     phone: { suffixLength: 4 }
   },
   nl: {
-    titles: ["Dhr.", "Mevr.", "Dr.", "Ir."],
     firstNames: ["Daan", "Emma", "Noah", "Tess", "Sem", "Sophie", "Lucas", "Julia"],
     lastNames: ["de Jong", "Jansen", "de Vries", "van den Berg", "Bakker", "Visser", "Smit", "Meijer"],
     streets: [
@@ -1417,7 +1407,6 @@ const offlineAddressDatabase = {
     phone: { suffixLength: 5 }
   },
   ch: {
-    titles: ["Sr.", "Sra.", "Dr.", "Prof."],
     firstNames: ["Luca", "Mia", "Noah", "Emma", "Leon", "Lina", "Jonas", "Sofía"],
     lastNames: ["Müller", "Meier", "Schmid", "Keller", "Weber", "Fischer", "Huber", "Zimmermann"],
     streets: [
@@ -1442,7 +1431,6 @@ const offlineAddressDatabase = {
     phone: { suffixLength: 5 }
   },
   no: {
-    titles: ["Hr.", "Fru", "Dr.", "Prof."],
     firstNames: ["Jakob", "Nora", "Emil", "Emma", "Oliver", "Sofie", "Filip", "Ella"],
     lastNames: ["Hansen", "Johansen", "Olsen", "Larsen", "Andersen", "Pedersen", "Nilsen", "Kristiansen"],
     streets: [
@@ -1467,7 +1455,6 @@ const offlineAddressDatabase = {
     phone: { suffixLength: 5 }
   },
   fi: {
-    titles: ["Herra", "Rva", "Toht.", "Prof."],
     firstNames: ["Eetu", "Aino", "Onni", "Emma", "Leo", "Olivia", "Veeti", "Sofia"],
     lastNames: ["Korhonen", "Virtanen", "Mäkinen", "Nieminen", "Mäkelä", "Hämäläinen", "Laine", "Heikkinen"],
     streets: [
@@ -1492,7 +1479,6 @@ const offlineAddressDatabase = {
     phone: { suffixLength: 5 }
   },
   dk: {
-    titles: ["Hr.", "Fru", "Dr.", "Prof."],
     firstNames: ["William", "Ida", "Lucas", "Emma", "Oscar", "Clara", "Alfred", "Freja"],
     lastNames: ["Jensen", "Nielsen", "Hansen", "Pedersen", "Andersen", "Christensen", "Larsen", "Sørensen"],
     streets: [
@@ -1517,7 +1503,6 @@ const offlineAddressDatabase = {
     phone: { suffixLength: 4 }
   },
   nz: {
-    titles: ["Mr.", "Mrs.", "Ms.", "Dr."],
     firstNames: ["Oliver", "Isla", "Jack", "Charlotte", "Noah", "Harper", "Leo", "Amelia"],
     lastNames: ["Smith", "Jones", "Williams", "Brown", "Wilson", "Taylor", "White", "Thompson"],
     streets: [
@@ -1542,7 +1527,6 @@ const offlineAddressDatabase = {
     phone: { suffixLength: 6 }
   },
   ie: {
-    titles: ["Mr.", "Mrs.", "Ms.", "Dr."],
     firstNames: ["Jack", "Emily", "James", "Sophie", "Daniel", "Grace", "Conor", "Aoife"],
     lastNames: ["Murphy", "Kelly", "O'Sullivan", "Walsh", "Smith", "O'Brien", "Byrne", "Ryan"],
     streets: [
@@ -1567,7 +1551,6 @@ const offlineAddressDatabase = {
     phone: { suffixLength: 5 }
   },
   tr: {
-    titles: ["Bay", "Bayan", "Dr.", "Prof."],
     firstNames: ["Mehmet", "Ayşe", "Ahmet", "Fatma", "Mustafa", "Elif", "Emre", "Zeynep"],
     lastNames: ["Yılmaz", "Kaya", "Demir", "Şahin", "Çelik", "Yıldız", "Aydın", "Öztürk"],
     streets: [
@@ -1592,7 +1575,6 @@ const offlineAddressDatabase = {
     phone: { suffixLength: 6 }
   },
   in: {
-    titles: ["Mr.", "Mrs.", "Dr.", "Prof."],
     firstNames: ["Aarav", "Aanya", "Vivaan", "Diya", "Aditya", "Isha", "Kabir", "Anaya"],
     lastNames: ["Sharma", "Verma", "Patel", "Gupta", "Reddy", "Kapoor", "Singh", "Khan"],
     streets: [
@@ -1656,7 +1638,6 @@ function getRandomOfflineAddress(countryCode = "us") {
   }
 
   return {
-    title: pickRandom(dataset.titles) || "",
     firstName: pickRandom(dataset.firstNames) || "",
     lastName: pickRandom(dataset.lastNames) || "",
     streetName: pickRandom(dataset.streets) || "",
