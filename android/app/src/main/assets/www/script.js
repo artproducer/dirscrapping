@@ -248,6 +248,36 @@
       return;
     }
 
+    (function () {
+      const meta = document.querySelector('meta[name="theme-color"]');
+
+      function applyThemeColor() {
+        const isDark = document.body.classList.contains('dark-mode');
+        const bg = getComputedStyle(document.body)
+          .getPropertyValue(isDark ? '--background-dark' : '--background')
+          .trim();
+        meta.setAttribute('content', bg || (isDark ? '#121219' : '#f3f1f7'));
+      }
+
+      // Llamada inicial
+      applyThemeColor();
+
+      // Reaplicar cuando cambie el sistema
+      const mql = window.matchMedia('(prefers-color-scheme: dark)');
+      mql.addEventListener?.('change', applyThemeColor);
+
+      // Reaplicar cuando uses tu botón de tema
+      const themeBtn = document.getElementById('theme-toggle');
+      if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+          // aquí asumes que en otro lugar alternas la clase 'dark-mode' en <body>
+          // si no, alterna aquí:
+          // document.body.classList.toggle('dark-mode');
+          applyThemeColor();
+        });
+      }
+    })();
+
     try {
       if (androidClipboard) {
         androidClipboard(text);
