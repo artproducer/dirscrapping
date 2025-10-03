@@ -40,18 +40,88 @@
 
   const countrySelect = document.getElementById("country-select");
   const flagEl = document.getElementById("flag");
+  const countryButton = document.getElementById("country-button");
+  const countryLabel = document.getElementById("country-label");
 
   function updateFlag() {
-    if (!flagEl || !countrySelect) {
+    if (!countrySelect) {
       return;
     }
-    flagEl.className = "fi fi-" + countrySelect.value;
+    const value = countrySelect.value;
+    if (flagEl) {
+      flagEl.className = "fi fi-" + value;
+    }
+
+    const selectedOption = countrySelect.options[countrySelect.selectedIndex];
+    const readable = selectedOption ? selectedOption.textContent : value.toUpperCase();
+
+    if (countryLabel) {
+      countryLabel.textContent = readable;
+    }
+
+    if (countryButton) {
+      const aria = readable ? `Cambiar país (actual: ${readable})` : "Cambiar país";
+      countryButton.setAttribute("aria-label", aria);
+      countryButton.setAttribute("aria-expanded", "false");
+    }
   }
 
   if (countrySelect) {
     countrySelect.addEventListener("change", updateFlag);
+    countrySelect.addEventListener("blur", () => {
+      if (countryButton) {
+        countryButton.setAttribute("aria-expanded", "false");
+      }
+    });
   }
   updateFlag();
+
+  function openCountryPicker() {
+    if (!countrySelect) {
+      return;
+    }
+
+    const previousPointer = countrySelect.style.pointerEvents;
+    countrySelect.style.pointerEvents = "auto";
+
+    if (countryButton) {
+      countryButton.setAttribute("aria-expanded", "true");
+    }
+
+    if (typeof countrySelect.showPicker === "function") {
+      try {
+        countrySelect.showPicker();
+        setTimeout(() => {
+          countrySelect.style.pointerEvents = previousPointer;
+        }, 250);
+        return;
+      } catch (err) {
+        // fallback below
+      }
+    }
+
+    if (typeof countrySelect.focus === "function") {
+      try {
+        countrySelect.focus({ preventScroll: true });
+      } catch (focusErr) {
+        countrySelect.focus();
+      }
+    }
+    countrySelect.click();
+    setTimeout(() => {
+      countrySelect.style.pointerEvents = previousPointer;
+    }, 250);
+  }
+
+  if (countryButton && countrySelect) {
+    countryButton.addEventListener("click", openCountryPicker);
+    countryButton.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " " || event.key === "Spacebar") {
+        event.preventDefault();
+        openCountryPicker();
+      }
+    });
+  }
 
   function sanitizePhone(value) {
     return String(value === undefined || value === null ? "" : value).replace(/\D+/g, "");
