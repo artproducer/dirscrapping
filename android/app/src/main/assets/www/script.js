@@ -153,13 +153,13 @@
 
   function buildStreet(entry) {
     const parts = [];
-    if (entry && entry.streetNumber !== undefined && entry.streetNumber !== null) {
-      const number = String(entry.streetNumber).trim();
-      if (number) parts.push(number);
-    }
     if (entry && entry.streetName) {
       const street = String(entry.streetName).trim();
       if (street) parts.push(street);
+    }
+    if (entry && entry.streetNumber !== undefined && entry.streetNumber !== null) {
+      const number = String(entry.streetNumber).trim();
+      if (number) parts.push(number);
     }
     return parts.length ? parts.join(" ") : "N/A";
   }

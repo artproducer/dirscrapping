@@ -1591,7 +1591,7 @@ const offlineAddressDatabase = {
     ],
     phone: { suffixLength: 4 }
   },
-    nl: {
+  nl: {
     firstNames: ["Daan", "Julia", "Noah", "Emma", "Sem", "Sophie", "Lucas", "Mila", "Levi", "Sara", "Thomas", "Tess", "Finn", "Lotte", "Bram", "Anna", "Luuk", "Eva", "Jesse", "Noor", "Mees", "Olivia", "Tijn", "Roos"],
     lastNames: ["de Jong", "Jansen", "de Vries", "van den Berg", "Bakker", "van Dijk", "Visser", "Smit", "Meijer", "Bos", "Peters", "Hendriks", "van Leeuwen", "Dekker", "Brouwer", "de Boer", "van der Meer", "Mulder", "Kok", "van Dam", "van der Linden", "Vermeulen", "Schouten", "van Beek"],
     streets: [
@@ -1686,6 +1686,78 @@ const offlineAddressDatabase = {
       { city: "Lugano", state: "Tesino", postalCodes: ["6900", "6901", "6904"], phonePrefix: "4191" }
     ],
     phone: { suffixLength: 4 }
+  },
+  ve: {
+    firstNames: [
+      "José", "María", "Luis", "Ana", "Carlos", "Carmen", "Juan", "Rosa", "Pedro", "Luisa",
+      "Andrés", "Gabriela", "Miguel", "Daniela", "Alejandro", "Valentina", "Santiago",
+      "Paola", "Ricardo", "Patricia", "Jorge", "Carolina", "Diego", "Natalia"
+    ],
+    lastNames: [
+      "González", "Rodríguez", "Pérez", "García", "Hernández", "Martínez", "Sánchez", "Ramírez",
+      "Torres", "Rivero", "Acosta", "Moreno", "Jiménez", "Rojas", "Castillo", "Mendoza",
+      "Navarro", "Vargas", "Romero", "Blanco", "Medina", "Gutiérrez", "Silva", "Cabrera"
+    ],
+    streets: [
+      "Av. Bolívar",
+      "Av. Libertador",
+      "Av. Urdaneta",
+      "Av. Sucre",
+      "Av. Francisco de Miranda",
+      "Av. Andrés Bello",
+      "Av. Fuerzas Armadas",
+      "Av. Universidad",
+      "Av. Lecuna",
+      "Av. Casanova",
+      "Av. Principal de Las Mercedes",
+      "Av. Intercomunal",
+      "Av. Bella Vista",
+      "Av. 5 de Julio",
+      "Av. Delicias",
+      "Av. La Limpia",
+      "Av. Cedeño",
+      "Av. Enrique Tejera",
+      "Av. Lara",
+      "Av. Bracamonte",
+      "Av. Vargas",
+      "Av. Las Delicias",
+      "Av. Las Américas",
+      "Calle 72",
+      "Calle 50",
+      "Calle Real",
+      "Calle Libertad",
+      "Calle Comercio",
+      "Boulevard Pérez Bonalde",
+      "Paseo Los Próceres"
+    ],
+    houseNumberRange: [1, 350],
+    cities: [
+      { city: "Caracas", state: "Distrito Capital / Miranda", postalCodes: ["1010", "1060", "1070", "1080"], phonePrefix: "58212" },
+      { city: "Valencia", state: "Carabobo", postalCodes: ["2001", "2005", "2007"], phonePrefix: "58241" },
+      { city: "Maracay", state: "Aragua", postalCodes: ["2101", "2103", "2104"], phonePrefix: "58243" },
+      { city: "Maracaibo", state: "Zulia", postalCodes: ["4001", "4002", "4005"], phonePrefix: "58261" },
+      { city: "Barquisimeto", state: "Lara", postalCodes: ["3001", "3002", "3003"], phonePrefix: "58251" },
+      { city: "Mérida", state: "Mérida", postalCodes: ["5101", "5107", "5111"], phonePrefix: "58274" },
+      { city: "San Cristóbal", state: "Táchira", postalCodes: ["5001", "5007"], phonePrefix: "58276" },
+      { city: "Barcelona", state: "Anzoátegui", postalCodes: ["6001", "6003"], phonePrefix: "58281" },
+      { city: "Puerto La Cruz", state: "Anzoátegui", postalCodes: ["6023", "6021"], phonePrefix: "58281" },
+      { city: "Lechería", state: "Anzoátegui", postalCodes: ["6016"], phonePrefix: "58281" },
+      { city: "Puerto Ordaz", state: "Bolívar", postalCodes: ["8050"], phonePrefix: "58286" },
+      { city: "San Félix", state: "Bolívar", postalCodes: ["8051"], phonePrefix: "58286" },
+      { city: "Ciudad Bolívar", state: "Bolívar", postalCodes: ["8001", "8003"], phonePrefix: "58285" },
+      { city: "Maturín", state: "Monagas", postalCodes: ["6201", "6203"], phonePrefix: "58291" },
+      { city: "Cumaná", state: "Sucre", postalCodes: ["6101", "6104"], phonePrefix: "58293" },
+      { city: "Porlamar", state: "Nueva Esparta", postalCodes: ["6301"], phonePrefix: "58295" },
+      { city: "Pampatar", state: "Nueva Esparta", postalCodes: ["6316"], phonePrefix: "58295" },
+      { city: "La Asunción", state: "Nueva Esparta", postalCodes: ["6311"], phonePrefix: "58295" },
+      { city: "Coro", state: "Falcón", postalCodes: ["4101"], phonePrefix: "58268" },
+      { city: "Punto Fijo", state: "Falcón", postalCodes: ["4150", "4112"], phonePrefix: "58269" },
+      { city: "Barinas", state: "Barinas", postalCodes: ["5201", "5205"], phonePrefix: "58273" },
+      { city: "Acarigua", state: "Portuguesa", postalCodes: ["3301", "3303"], phonePrefix: "58255" },
+      { city: "Guanare", state: "Portuguesa", postalCodes: ["3350", "3353"], phonePrefix: "58272" },
+      { city: "La Guaira", state: "La Guaira", postalCodes: ["1160", "1162"], phonePrefix: "58212" }
+    ],
+    phone: { suffixLength: 7 }
   },
   no: {
     firstNames: ["Jakob", "Emma", "Lucas", "Nora", "Filip", "Sofie", "Oskar", "Ella", "Aksel", "Olivia", "Noah", "Ada", "Theodor", "Ingrid", "Henrik", "Frida", "Ludvig", "Selma", "Emil", "Sara", "Iben", "Hedda", "Sander", "Amalie"],
